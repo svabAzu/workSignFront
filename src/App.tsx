@@ -1,14 +1,20 @@
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
+
+import  {LoginPages}  from "./pages/LoginPages";
+import  {RegisterPages}  from "./pages/RegisterPages";
 
 function App() {
 
 
   return (
-    <>
-     <p className='bg-red-100'>Hola</p>
-        
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<h1>Home</h1>} />
+        <Route path='/login' element={<LoginPages />} />
+        <Route path='/register' element={<RegisterPages />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
