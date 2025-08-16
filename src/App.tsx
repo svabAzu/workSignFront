@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-     <p className='bg-red-100'>mi ramita</p>
+     <p className='bg-red-100'>la ramita de azu</p>
         
     </>
   )
