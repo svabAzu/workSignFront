@@ -6,7 +6,6 @@ import { Sidebar } from './components/sidebar/Sidebar'
 import React, { useState } from 'react';
 
 
-
 function App() {
 
   const [siderbarOpen, setSidebarOpen] = useState(false);
