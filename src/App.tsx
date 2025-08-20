@@ -1,20 +1,29 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
+import MyRouters from './routers/routers'
 
-import  {LoginPages}  from "./pages/LoginPages";
-import  {RegisterPages}  from "./pages/RegisterPages";
+
+
+import { Sidebar } from './components/sidebar/Sidebar'
+import React, { useState } from 'react';
+
+
 
 function App() {
 
+  const [siderbarOpen, setSidebarOpen] = useState(false);
+
+  const siderbarStateActive = "grid grid-cols-[90px_auto] bg-gray-500 transition-all duration-200 "
+  const siderbarState = "grid grid-cols-[250px_auto] bg-gray-500 transition-all duration-200"
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<h1>Home</h1>} />
-        <Route path='/login' element={<LoginPages />} />
-        <Route path='/register' element={<RegisterPages />} />
-      </Routes>
-    </BrowserRouter>
+    <div className='flex flex-col min-h-[95dvh] '>
+      <div className='w-full h-[5dvh] bg-[#199431]'></div>
+      <div className={siderbarOpen ? siderbarStateActive : siderbarState}>
+        <Sidebar siderbarOpen={siderbarOpen} setSidebarOpen={setSidebarOpen} />
+        <MyRouters />
+      </div>
+    </div>
+
+
   )
 }
 
