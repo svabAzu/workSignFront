@@ -1,10 +1,10 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-//import { useAuth } from "../context/AuthContext";
-//import { useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
-import { PiBroomFill } from "react-icons/pi";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -23,14 +23,14 @@ const schema = Yup.object().shape({
 
 export const LoginPages = () => {
 
-  // const { signin, authErrors, isAutheticaded } = useAuth();
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (isAutheticaded) navigate("/main");
-  // }, [isAutheticaded]);
+  const { signin, authErrors, isAutheticaded } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAutheticaded) navigate("/");
+  }, [isAutheticaded]);
 
   const submitForm = async (values: myFormValues) => {
-    //signin(values);
+    signin(values);
 
     console.log(values)
   };
@@ -46,8 +46,8 @@ export const LoginPages = () => {
     }
   );
   return (
-    <div className="flex flex-col items-start justify-center h-[95vh] bg-[#F1F1F1]">
-      <div className="h-[95%] w-[98%] bg-white rounded-4xl flex justify-center">
+    <div className="flex flex-col items-center justify-center h-[95vh] bg-[#F1F1F1]">
+      <div className="h-[95%] w-[98%] bg-[#F1F1F1] rounded-4xl flex justify-center">
 
         <section className="w-1/2 flex flex-col items-center justify-center gap-4 ">
            <img className="max-h-[50%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
@@ -55,9 +55,9 @@ export const LoginPages = () => {
         </section>  
 
         <div className="h-full w-1/2 flex items-center ">
-          <div className="bg-[#F1F1F1] w-[80%] flex items-center flex-col h-auto rounded-xl shadow-lg ">
+          <div className="bg-[#F1F1F1] w-[80%] flex items-center flex-col h-auto rounded-xl shadow-gray-500 shadow-lg">
             <div className="w-full flex justify-center items-center py-4 rounded-t-lg  bg-custom-green">
-              {/* <LogoWhite /> */}
+            
             </div>
             <form onSubmit={handleSubmit} onReset={handleReset} className="w-[80%] flex flex-col mt-5 mb-5">
               <h2 className="text-black mt-3 font-bold mb-1">Usuario</h2>
@@ -91,11 +91,11 @@ export const LoginPages = () => {
               )}
 
               <div className="w-full flex flex-col items-center justify-center">
-                {/* {authErrors.map((error, i) => (
+                {authErrors.map((error, i) => (
                   <div className="text-custom-yellow my-1 text-xs" key={i}>
                     {error}
                   </div>
-                ))} */}
+                ))}
                 <div className="w-full mb-5 flex items-center justify-center">
                   <button
                     className=" flex justify-center items-center mt-5 p-6 w-40 h-10 hover:bg-[#ffff] bg-green-600 text-[#ffff] font-bold hover:text-custom-green rounded-2xl"
