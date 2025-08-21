@@ -70,7 +70,7 @@ export const LoginPages = () => {
                 <input
                   className="border border-gray-400 p-2 rounded flex justify-center w-full"
                   type={showPassword ? "text" : "password"}
-                  placeholder="********"
+                  placeholder="•••••••••"
                   name="password"
                   value={values.password}
                   onChange={handleChange}
