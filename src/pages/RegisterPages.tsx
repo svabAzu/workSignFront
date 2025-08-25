@@ -1,10 +1,8 @@
 import { useFormik } from "formik";
 import React from "react";
 
-export const RegisterPages = () => {
-  const submitForm = (values) => {};
-
-  const { handleSubmit, handleChange } = useFormik({
+export const RegisterForm = () => {
+  const { handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       name: "",
       surname: "",
@@ -15,12 +13,13 @@ export const RegisterPages = () => {
       photo: null,
       ussser: "",
     },
-    onSubmit: submitForm,
+    onSubmit: (values) => {
+      console.log(values);
+    },
   });
 
   return (
-    <div className="w-[100%] flex flex-col items-center justify-center bg-[#F1F1F1] ">
-      <div className="h-[95%] w-[98%] bg-white rounded-4xl items-center justify-center flex flex-col">
+    <form onSubmit={handleSubmit}>
         <div className="grid items-center grid-cols-5 grid-rows-5 gap-4">
           <div className=" text-[#199431] items-start font-bold col-span-6 text-3xl  ">
             R E G I S T R O
@@ -34,7 +33,7 @@ export const RegisterPages = () => {
             <h2>Contaseña</h2>
           </div>
           <div className="col-span-2 row-span-4 row-start-2 flex flex-col gap-y-5">
-            <form className="flex flex-col gap-y-5 " onSubmit={handleSubmit}>
+            
               <input
                 className="border-2 border-[#ACACAE] "
                 type="text"
@@ -77,7 +76,7 @@ export const RegisterPages = () => {
                 name="password"
                 onChange={handleChange}
               />
-            </form>
+            
           </div>
           <div className="col-span-2 row-span-4 row-start-2">
             <div>
@@ -90,7 +89,7 @@ export const RegisterPages = () => {
                 type="file"
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 onChange={(event) => {
-                  submitForm.setFieldValue("photo", event.currentTarget.files[0]);
+                  setFieldValue("photo", event.currentTarget.files[0]);
                 }}
               />
             </div>
@@ -105,6 +104,15 @@ export const RegisterPages = () => {
             </button>{" "}
           </div>
         </div>
+    </form>
+  );
+}
+
+export const RegisterPages = () => {
+  return (
+    <div className="w-[100%] flex flex-col items-center justify-center h-[95dvh] bg-[#F1F1F1] ">
+      <div className="h-[95%] w-[98%] bg-white rounded-4xl items-center justify-center flex flex-col">
+        <RegisterForm />
       </div>
     </div>
   );
