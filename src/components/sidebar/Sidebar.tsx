@@ -1,4 +1,4 @@
-import { MdKeyboardArrowRight, MdHome, MdPersonAdd, MdLogout } from "react-icons/md";
+import { MdKeyboardArrowRight, MdHome, MdPersonAdd, MdLogout, MdOutlineSettings } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -12,13 +12,6 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
     await logoutUser();
   };
 
-  const secondaryLinksArray = [
-    {
-      label: "Salir",
-      icon: <MdLogout className="size-6 text-black" />,
-      onClick: handleClick,
-    },
-  ];
 
   return (
     <main className='bg-[#F1F1F1] text-white sticky'>
@@ -39,19 +32,20 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
         </div>
       </section>
 
-      <section className="flex flex-col justify-start items-center gap-3 w-full">
+
+      <section className="flex flex-col gap-6 items-center w-full h-60">
         {linksArray.map(({ icon, label, To }) => (
           <div className={`flex justify-center items-center  ${siderbarOpen ? 'w-full' : 'w-[80%]'}`} key={label}>
             <div
               className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8
         max-w-[70%] w-full rounded-2xl border-2
-        ${location.pathname === To
+        ${(To === "/" ? location.pathname === To : location.pathname.startsWith(To))
                   ? "border-[#199431] bg-[#199431] text-white"
                   : "border-[#ACACAE] bg-[#ACACAE] text-white hover:border-[#199431]"}
       `}
             >
-              <Link to={To} className="flex items-center decoration-none py-1.5 w-full justify-center ">
-                <div className="px-2 py-4 flex ">
+              <Link to={To} className="flex items-center decoration-none w-full justify-center ">
+                <div className="px-2 py-2 flex ">
                   {icon}
                 </div>
                 {!siderbarOpen && (
@@ -61,29 +55,46 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
             </div>
           </div>
         ))}
+        
       </section>
+
 
       <span className="h-0.5 w-full bg-white flex my-6 " />
 
-      <section className="flex flex-col justify-end items-center gap-1 w-full h-60">
-        {secondaryLinksArray.map(({ icon, label, onClick }) => (
+
+      <section className="flex flex-col justify-start items-center gap-3 w-full">
+        {secondaryLinksArray.map(({ icon, label, To }) => (
           <div className={`flex justify-center items-center  ${siderbarOpen ? 'w-full' : 'w-[80%]'}`} key={label}>
             <div
               className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8
-        max-w-[70%] w-full rounded-2xl border-2 border-[#ACACAE] bg-[#ACACAE] text-white hover:border-[#199431]`}
+        max-w-[70%] w-full rounded-2xl border-2
+        ${(To === "/" ? location.pathname === To : location.pathname.startsWith(To)) 
+                  ? "border-[#199431] bg-[#199431] text-white"
+                  : "border-[#ACACAE] bg-[#ACACAE] text-white hover:border-[#199431]"}
+      `}
             >
-              <button onClick={onClick} className="flex items-center decoration-none py-1.5 w-full justify-center border-none bg-transparent cursor-pointer">
-                <div className="px-2 py-4 flex ">
+              <Link to={To} className="flex items-center decoration-none py-1.5 w-full justify-center ">
+                <div className="px-2 py-2 flex ">
                   {icon}
                 </div>
                 {!siderbarOpen && (
                   <span className="text-black">{label}</span>
                 )}
-              </button>
+              </Link>
             </div>
           </div>
         ))}
+        <button onClick={handleClick} className="flex items-center decoration-none py-1.5 w-full justify-center border-none bg-transparent cursor-pointer">
+          <div className="px-2 py-4 flex ">
+            {<MdLogout className="size-6 text-black" />}
+          </div>
+          {!siderbarOpen && (
+            <span className="text-black">Salir</span>
+          )}
+        </button>
       </section>
+
+
     </main>
   )
 }
@@ -94,11 +105,19 @@ const linksArray = [
     icon: <MdHome className="size-6 text-black" />,
     To: "/"
   },
+  // {
+  //   label: "Register",
+  //   icon: <MdPersonAdd className="size-6 text-black" />,
+  //   To: "/register"
+  // }
+];
+
+const secondaryLinksArray = [
   {
-    label: "Register",
-    icon: <MdPersonAdd className="size-6 text-black" />,
-    To: "/register"
-  }
+    label: "Configuración",
+    icon: <MdOutlineSettings className="size-6 text-black"/>,
+    To: "/setting",
+  },
 ];
 
 interface SidebarProps {
