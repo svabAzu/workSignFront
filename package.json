@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/antonio": "^5.2.6",
     "@fontsource-variable/open-sans": "^5.2.6",
+    "@fontsource-variable/teko": "^5.2.6",
+    "@fontsource/anton": "^5.2.6",
+    "@fontsource/bebas-neue": "^5.2.6",
     "@tailwindcss/vite": "^4.1.12",
     "axios": "^1.11.0",
     "formik": "^2.4.6",

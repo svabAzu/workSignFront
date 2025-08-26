@@ -43,8 +43,8 @@ export const LoginPages = () => {
     <div className="flex flex-col items-center justify-center h-[95vh] bg-[#F1F1F1]">
       <div className="h-[95%] w-[98%] bg-[#F1F1F1] rounded-4xl flex justify-center">
         <section className="w-1/2 flex flex-col items-center justify-center gap-4 ">
-          <img className="max-h-[50%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
-          <h1 className="text-5xl font-bold">Bienvenido</h1>
+          <img className="max-h-[40%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
+          <h1 className="text-6xl font-bold">BIENVENIDO</h1>
         </section>
 
         <div className="h-full w-1/2 flex items-center ">
@@ -98,7 +98,7 @@ export const LoginPages = () => {
                 ))}
                 <div className="w-full mb-5 flex items-center justify-center">
                   <button
-                    className=" flex justify-center items-center mt-5 p-6 w-40 h-10 hover:bg-[#ACB0B6] bg-green-600 text-[#ffff] font-bold hover:text-green-600 border-2 border-transparent hover:border-green-600 rounded-2xl"
+                    className=" flex justify-center items-center mt-5 p-6 w-40 h-10 bg-black text-[#ffff] font-bold border-2 border-transparent hover:bg-green-600 rounded-2xl transition-colors duration-200 "
                     type="submit"
                   >
                     Ingresar
