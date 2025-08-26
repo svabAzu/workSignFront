@@ -11,7 +11,7 @@ export const SidebarSettings = () => {
 
         <main>
             <section className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-[#199431]">Configuración</h1>
+                <h1 className="text-3xl font-bold text-[#199431]">C O N F I G U R A C I Ó N</h1>
                 <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
                         <img src={user.avatar_url} alt={"Imagen de " + user.name + " " + user.last_name} className="object-cover w-full h-full" />
@@ -39,7 +39,7 @@ export const SidebarSettings = () => {
                 </Link>
             </nav>
 
-            <section className="p-4 mt-4">
+            <section className="p-4  mt-4">
                 <Outlet />
             </section>
         </main>

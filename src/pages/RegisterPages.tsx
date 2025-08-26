@@ -20,10 +20,10 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-        <div className="grid items-center grid-cols-5 grid-rows-5 gap-4">
-          <div className=" text-[#199431] items-start font-bold col-span-6 text-3xl  ">
+        <div className="grid items-center grid-cols-5  grid-rows-5 gap-4">
+          <h1 className=" text-[#199431] items-start font-bold col-span-6 text-3xl  ">
             R E G I S T R O
-          </div>
+          </h1>
           <div className="flex flex-col gap-y-6 font-bold col-span-2 row-span-4 row-start-2">
             <h2>Nombre</h2>
             <h2>Apellido</h2>

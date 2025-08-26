@@ -43,8 +43,8 @@ export const LoginPages = () => {
     <div className="flex flex-col items-center justify-center h-[95vh] bg-[#F1F1F1]">
       <div className="h-[95%] w-[98%] bg-[#F1F1F1] rounded-4xl flex justify-center">
         <section className="w-1/2 flex flex-col items-center justify-center gap-4 ">
-          <img className="max-h-[50%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
-          <h1 className="text-5xl font-bold">Bienvenido</h1>
+          <img className="max-h-[40%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
+          <h1 className="text-6xl font-bold">BIENVENIDO</h1>
         </section>
 
         <div className="h-full w-1/2 flex items-center ">
