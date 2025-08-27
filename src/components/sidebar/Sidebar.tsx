@@ -14,7 +14,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
 
 
   return (
-    <main className='bg-[#F1F1F1] text-white sticky'>
+    <main className='bg-[#F1F1F1] text-white sticky top-0 h-screen'>
       <button
         className={`absolute top-24 -right-4 w-8 h-8 rounded-[50%] shadow-[0_0_7px_white] bg-green-600 cursor-pointer border-none transition-all duration-[0.5s] outline-none ${siderbarOpen ? 'rotate-0' : 'rotate-180'}`}
         onClick={() => setSidebarOpen(!siderbarOpen)}
@@ -101,7 +101,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
 
 const linksArray = [
   {
-    label: "Home",
+    label: "Inicio",
     icon: <MdHome className="size-6 text-black" />,
     To: "/"
   },
@@ -114,10 +114,11 @@ const linksArray = [
 
 const secondaryLinksArray = [
   {
-    label: "Configuración",
+    label: "Ajustes",
     icon: <MdOutlineSettings className="size-6 text-black"/>,
     To: "/setting",
   },
+  
 ];
 
 interface SidebarProps {
