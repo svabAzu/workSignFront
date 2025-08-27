@@ -104,7 +104,9 @@ export const RegisterForm = () => {
             </button>{" "}
           </div>
         </div>
+
     </form>
+
   );
 }
 
