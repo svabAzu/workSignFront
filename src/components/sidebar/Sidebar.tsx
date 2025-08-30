@@ -41,7 +41,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
         max-w-[70%] w-full rounded-2xl border-2
         ${(To === "/" ? location.pathname === To : location.pathname.startsWith(To))
                   ? "border-[#199431] bg-[#199431] text-white"
-                  : "border-[#ACACAE] bg-[#ACACAE] text-white hover:border-[#199431]"}
+                  : "border-[#ACACAE] bg-[#ACACAE] text-black hover:border-[#199431]"}
       `}
             >
               <Link to={To} className="flex items-center decoration-none w-full justify-center ">
@@ -49,7 +49,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
                   {icon}
                 </div>
                 {!siderbarOpen && (
-                  <span className="text-black">{label}</span>
+                  <span className="">{label}</span>
                 )}
               </Link>
             </div>
@@ -70,7 +70,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
         max-w-[70%] w-full rounded-2xl border-2
         ${(To === "/" ? location.pathname === To : location.pathname.startsWith(To)) 
                   ? "border-[#199431] bg-[#199431] text-white"
-                  : "border-[#ACACAE] bg-[#ACACAE] text-white hover:border-[#199431]"}
+                  : "border-[#ACACAE] bg-[#ACACAE] text-black hover:border-[#199431]"}
       `}
             >
               <Link to={To} className="flex items-center decoration-none py-1.5 w-full justify-center ">
@@ -78,7 +78,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
                   {icon}
                 </div>
                 {!siderbarOpen && (
-                  <span className="text-black">{label}</span>
+                  <span >{label}</span>
                 )}
               </Link>
             </div>
@@ -102,7 +102,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
 const linksArray = [
   {
     label: "Inicio",
-    icon: <MdHome className="size-6 text-black" />,
+    icon: <MdHome className="size-6 " />,
     To: "/"
   },
   // {
@@ -115,7 +115,7 @@ const linksArray = [
 const secondaryLinksArray = [
   {
     label: "Ajustes",
-    icon: <MdOutlineSettings className="size-6 text-black"/>,
+    icon: <MdOutlineSettings className="size-6"/>,
     To: "/setting",
   },
   
