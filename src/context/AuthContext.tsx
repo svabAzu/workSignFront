@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
 import {
-    //registerRequest,
+    registerRequest,
     loginRequest,
     //registerClienteRequest,
     verifyTokenRequest,
@@ -15,6 +15,7 @@ interface AuthContextType {
     authErrors: any[];
     loading: boolean;
     signin: (user: any) => Promise<any | void>;
+    signup: (user: any) => Promise<void>;
     logoutUser: () => Promise<void>;
 }
 
@@ -38,22 +39,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [authErrors, setAuthErros] = useState<any[]>([]);
     const [loading, setLoading] = useState(true)
 
-    console.log('user', user)
+    //console.log('user', user)
 
-    // const signup = async (user) => {
-    //     try {
-    //         const res = await registerRequest(user);
-    //         console.log(res)
-    //         setIsAutheticaded(true);
-    //         return res.data; // Devuelve el usuario creado
-    //     } catch (error) {
-    //         if (Array.isArray(error.response.data)) {
-    //             setAuthErros(error.response.data);
-    //         } else {
-    //             setAuthErros([error.response.data.message]);
-    //         }
-    //     }
-    // };
+    const signup = async (user: any) => {
+        try {
+            const res = await registerRequest(user);
+            console.log(res)
+            setIsAutheticaded(true);
+          
+        } catch (error: any) {
+            if (Array.isArray(error.response.data)) {
+                setAuthErros(error.response.data);
+            } else {
+                setAuthErros([error.response.data.message]);
+            }
+        }
+    };
 
     const signin = async (user: any) => {
         try {
@@ -133,7 +134,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return (
         <AuthContext.Provider
             value={{
-                //signup,
+                signup,
                 signin,
                 user,
                 isAutheticaded,
