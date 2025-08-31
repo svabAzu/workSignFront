@@ -4,7 +4,11 @@ import { useAuth } from "../../context/AuthContext";
 
 export const SidebarSettings = () => {
     const { user } = useAuth();
-    //console.log(user)
+    console.log(user)
+
+    const avatarUrl = user.avatar_url
+        ? `http://localhost:4000/${user.avatar_url}`
+        : "/iconos/default-avatar.png";
 
 
     return (
@@ -14,8 +18,11 @@ export const SidebarSettings = () => {
                 <h1 className="text-3xl font-bold text-[#199431]">C O N F I G U R A C I Ó N</h1>
                 <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
-                        <img src={user.avatar_url} alt={"Imagen de " + user.name + " " + user.last_name} className="object-cover w-full h-full" />
-                    </div>
+                        <img
+                            src={avatarUrl}
+                            alt={`Imagen de ${user.name} ${user.last_name}`}
+                            className="object-cover w-full h-full"
+                        />                    </div>
                     <div>
                         <p className="font-bold text-lg">{user.name + " " + user.last_name}</p>
                         <Link to="/perfil" className="text-sm text-gray-500 hover:underline">Editar perfil</Link>

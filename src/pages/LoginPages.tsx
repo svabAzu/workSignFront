@@ -27,7 +27,7 @@ export const LoginPages = () => {
 
   const submitForm = async (values: myFormValues) => {
     signin(values);
-    console.log(values);
+    
   };
 
   const { handleSubmit, handleChange, handleReset, errors, values } = useFormik({
