@@ -1,21 +1,33 @@
 import Card from "../components/card/Card"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdArrowDropDown } from "react-icons/md";
+import { useGeneralTask } from "../context/GeneralTaskContext";
+
 
 
 
 export const HomePages = () => {
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: any) => {
         setBusqueda(e.target.value);
     };
 
 
     const [busqueda, setBusqueda] = useState("");
 
+    const { generalTask, getGeneralTask } = useGeneralTask();
+
+
+    useEffect(() => {
+
+        getGeneralTask();
+
+    }, []);
+
+
 
     return (
-        <div className="flex flex-col items-start w-[100%]  justify-center  bg-[#F1F1F1]">
+        <div className="flex flex-col items-start w-[100%]  justify-center pt-8 bg-[#F1F1F1]">
 
 
 
@@ -49,8 +61,17 @@ export const HomePages = () => {
                     </div>
                 </nav>
                 <article className="w-full">
-
-                    <Card />
+                    <section className="h-auto w-full flex items-center flex-col">
+                        {Array.isArray(generalTask) && generalTask.length > 0 ? (
+                            generalTask.map((general: any) => (
+                                <div className="w-full" key={general.id}>
+                                    <Card generalTask={general} />
+                                </div>
+                            ))
+                        ) : (
+                            <p>No hay pedidos disponibles</p>
+                        )}
+                    </section>
                 </article>
             </section>
         </div>

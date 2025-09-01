@@ -15,7 +15,7 @@ function App() {
 
 
     <div className='flex flex-col h-auto'>
-      <div className='w-full h-8 bg-[#199431]'></div>
+<div className="fixed top-0 left-0 w-full h-8 bg-[#199431] z-50"></div>
       
       {pathname !== '/login' ? (
         <div className={siderbarOpen ? siderbarStateActive : siderbarState}>

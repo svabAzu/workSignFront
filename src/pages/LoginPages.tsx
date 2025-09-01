@@ -40,7 +40,7 @@ export const LoginPages = () => {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-[95vh] bg-[#F1F1F1]">
+    <div className="flex flex-col items-center justify-center h-[95vh] pt-8 bg-[#F1F1F1]">
       <div className="h-[95%] w-[98%] bg-[#F1F1F1] rounded-4xl flex justify-center">
         <section className="w-1/2 flex flex-col items-center justify-center gap-4 ">
           <img className="max-h-[40%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
