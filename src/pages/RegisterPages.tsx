@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 interface RegisterFormValues {
@@ -17,7 +17,10 @@ interface RegisterFormValues {
 }
 
 export const RegisterForm = () => {
-  const { signup, authErrors, user } = useAuth();
+  const { signup, authErrors } = useAuth();
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const navigate = useNavigate();
 
   const roles = [
     { id: 1, name: "Plegador" },
@@ -78,6 +81,7 @@ export const RegisterForm = () => {
     handleChange,
     handleBlur, // <--- añadido
     setFieldValue,
+    resetForm,
     values,
     errors,
     touched,
@@ -95,6 +99,9 @@ export const RegisterForm = () => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
+
+      console.log(values);  
+
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("last_name", values.last_name);
@@ -109,10 +116,34 @@ export const RegisterForm = () => {
       }
 
       formData.append("specialties", JSON.stringify(values.specialties));
-      const res = await signup(formData);
-      console.log(res);
+      const success = await signup(formData);
+      if (success) {
+        setShowSuccessModal(true);
+      }
     },
   });
+
+  if (showSuccessModal) {
+    return (
+      <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
+        <div className="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
+          <h2 className="text-2xl font-bold text-green-600 mb-4">
+            ¡Registro Exitoso!
+          </h2>
+          <p className="mb-6">El usuario ha sido registrado correctamente.</p>
+          <button
+            onClick={() => {
+              setShowSuccessModal(false);
+              resetForm();
+            }}
+            className="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 transition-colors"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form

@@ -17,6 +17,8 @@ export const HomePages = () => {
 
     const { generalTask, getGeneralTask } = useGeneralTask();
 
+    //console.log(generalTask);
+
 
     useEffect(() => {
 
@@ -64,7 +66,7 @@ export const HomePages = () => {
                     <section className="h-auto w-full flex items-center flex-col">
                         {Array.isArray(generalTask) && generalTask.length > 0 ? (
                             generalTask.map((general: any) => (
-                                <div className="w-full" key={general.id}>
+                                <div className="w-full" key={general.ID_general_tasks}>
                                     <Card generalTask={general} />
                                 </div>
                             ))

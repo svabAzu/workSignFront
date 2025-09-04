@@ -14,8 +14,8 @@ interface AuthContextType {
     isAutheticaded: boolean;
     authErrors: any[];
     loading: boolean;
-    signin: (user: any) => Promise<any | void>;
-    signup: (user: any) => Promise<void>;
+    signin: (user: any) => Promise<any>;
+    signup: (user: any) => Promise<boolean>;
     logoutUser: () => Promise<void>;
 }
 
@@ -41,11 +41,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     //console.log('user', user)
 
-    const signup = async (user: any) => {
+    const signup = async (user: any): Promise<boolean> => {
         try {
             const res = await registerRequest(user);
             console.log(res)
             setIsAutheticaded(true);
+            return true;
           
         } catch (error: any) {
             if (Array.isArray(error.response.data)) {
@@ -53,17 +54,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             } else {
                 setAuthErros([error.response.data.message]);
             }
+            return false;
         }
     };
 
-    const signin = async (user: any) => {
+    const signin = async (user: any): Promise<any> => {
         try {
             const res = await loginRequest(user);
 
             const createdUser = res.data; // Asegúrate de que devuelve el usuario creado
             setUser(createdUser); // Actualiza el contexto con el usuario
             setIsAutheticaded(true);
-            return createdUser; // Devuelve el usuario creado
+            // Devuelve el usuario creado
+            return createdUser;
 
         } catch (error: any) {
             if (Array.isArray(error.response.data)) {

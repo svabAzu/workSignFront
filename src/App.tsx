@@ -6,10 +6,10 @@ import { useLocation } from 'react-router-dom';
 
 
 function App() {
-  const [siderbarOpen, setSidebarOpen] = useState(false);
+  const [siderbarOpen, setSidebarOpen] = useState(true);
   const { pathname } = useLocation();
-  const siderbarStateActive = "grid grid-cols-[90px_auto] bg-gray-500 transition-all duration-200 ";
-  const siderbarState = "grid grid-cols-[250px_auto] bg-gray-500 transition-all duration-200";
+  const siderbarStateActive = "grid grid-cols-[90px_auto] bg-[#F1F1F1] transition-all duration-200 ";
+  const siderbarState = "grid grid-cols-[250px_auto] bg-[#F1F1F1] transition-all duration-200";
 
   return (
 

@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export const SidebarSettings = () => {
     const { user } = useAuth();
-    console.log(user)
+    //console.log(user)
 
     const avatarUrl = user.avatar_url
         ? `http://localhost:4000/${user.avatar_url}`
