@@ -7,7 +7,7 @@ export const SidebarSettings = () => {
     //console.log(user)
 
     const avatarUrl = user.avatar_url
-        ? `http://localhost:4000/${user.avatar_url}`
+        ? `${import.meta.env.VITE_API_URL}/${user.avatar_url}`
         : "/iconos/default-avatar.png";
 
 
