@@ -1,6 +1,6 @@
 import Card, { getTaskPriority } from "../components/card/Card";
 import { useState, useEffect, useMemo } from "react";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 
 export const HomePages = () => {
@@ -41,28 +41,32 @@ export const HomePages = () => {
             return [];
         }
 
-        // 1. Filtrar por estado
-        const filteredTasks = selectedStateId
-            ? generalTask.filter(task =>
-                task.generalTaskState?.ID_general_task_states.toString() === selectedStateId
-            )
-            : generalTask;
+        let filteredTasks = [...generalTask];
 
-        // 2. Ordenar por prioridad
-        if (sortOrder === 'none') {
-            return filteredTasks;
+        // 1. Filtrar por estado
+        if (selectedStateId) {
+            filteredTasks = filteredTasks.filter(task =>
+                task.generalTaskState?.ID_general_task_states.toString() === selectedStateId
+            );
         }
 
-        const tasksToOrder = [...filteredTasks];
-        return tasksToOrder.sort((a, b) => {
+        // 2. Filtrar por búsqueda de cliente
+        if (busqueda) {
+            filteredTasks = filteredTasks.filter(task =>
+                task.client?.name.toLowerCase().includes(busqueda.toLowerCase())
+            );
+        }
+
+        // 3. Ordenar por prioridad
+        if (sortOrder !== 'none') {
+            return filteredTasks.sort((a, b) => {
             const priorityA = getTaskPriority(a.creation_date, a.estimated_delivery_date);
             const priorityB = getTaskPriority(b.creation_date, b.estimated_delivery_date);
-            if (sortOrder === 'desc') {
-                return priorityB - priorityA;
-            }
-            return priorityA - priorityB;
-        });
-    }, [generalTask, sortOrder, selectedStateId]);
+                return sortOrder === 'desc' ? priorityB - priorityA : priorityA - priorityB;
+            });
+        }
+        return filteredTasks;
+    }, [generalTask, sortOrder, selectedStateId, busqueda]);
 
     return (
         <div className="flex flex-col items-start w-[100%]  justify-center pt-8 bg-[#F1F1F1]">
@@ -87,7 +91,11 @@ export const HomePages = () => {
                             onClick={handleSortByPriority}
                             className="flex items-center justify-center rounded-4xl pl-5 bg-[#199431] text-white font-bold"
                         >
-                            Prioridad <MdArrowDropDown className="w-8 h-8" />
+                            Prioridad {sortOrder === 'desc' ? (
+                                <MdArrowDropUp className="w-8 h-8" />
+                            ) : (
+                                <MdArrowDropDown className="w-8 h-8" />
+                            )}
                         </button>
                     </div>
                     <div>
