@@ -1,32 +1,68 @@
-import Card from "../components/card/Card"
-import { useState, useEffect } from "react";
+import Card, { getTaskPriority } from "../components/card/Card";
+import { useState, useEffect, useMemo } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 
-
-
-
 export const HomePages = () => {
-
     const handleSearchChange = (e: any) => {
         setBusqueda(e.target.value);
     };
 
-
     const [busqueda, setBusqueda] = useState("");
+    const [sortOrder, setSortOrder] = useState<'none' | 'desc' | 'asc'>('none');
+    const [selectedStateId, setSelectedStateId] = useState<string>(''); // '' para "Todos"
 
-    const { generalTask, getGeneralTask } = useGeneralTask();
+    const { generalTask, getGeneralTask, generalTaskState, getGeneralTaskState } = useGeneralTask();
 
-    //console.log(generalTask);
+    console.log(generalTask);
+    console.log(generalTaskState);
 
 
     useEffect(() => {
-
         getGeneralTask();
-
+        getGeneralTaskState();
     }, []);
 
+    const handleSortByPriority = () => {
+        setSortOrder(prevOrder => {
+            if (prevOrder === 'none' || prevOrder === 'asc') {
+                return 'desc'; // Ordenar de más a menos urgente
+            }
+            return 'asc'; // Invertir orden (de menos a más urgente)
+        });
+    };
 
+    const handleStateFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedStateId(e.target.value);
+    };
+
+    const processedTasks = useMemo(() => {
+        if (!Array.isArray(generalTask)) {
+            return [];
+        }
+
+        // 1. Filtrar por estado
+        const filteredTasks = selectedStateId
+            ? generalTask.filter(task =>
+                task.generalTaskState?.ID_general_task_states.toString() === selectedStateId
+            )
+            : generalTask;
+
+        // 2. Ordenar por prioridad
+        if (sortOrder === 'none') {
+            return filteredTasks;
+        }
+
+        const tasksToOrder = [...filteredTasks];
+        return tasksToOrder.sort((a, b) => {
+            const priorityA = getTaskPriority(a.creation_date, a.estimated_delivery_date);
+            const priorityB = getTaskPriority(b.creation_date, b.estimated_delivery_date);
+            if (sortOrder === 'desc') {
+                return priorityB - priorityA;
+            }
+            return priorityA - priorityB;
+        });
+    }, [generalTask, sortOrder, selectedStateId]);
 
     return (
         <div className="flex flex-col items-start w-[100%]  justify-center pt-8 bg-[#F1F1F1]">
@@ -47,25 +83,34 @@ export const HomePages = () => {
                         </form>
                     </div>
                     <div>
-                        <button className="flex items-center justify-center rounded-4xl pl-5 bg-[#199431]">Prioridad <MdArrowDropDown className="w-8 h-8" /></button>
+                        <button
+                            onClick={handleSortByPriority}
+                            className="flex items-center justify-center rounded-4xl pl-5 bg-[#199431] text-white font-bold"
+                        >
+                            Prioridad <MdArrowDropDown className="w-8 h-8" />
+                        </button>
                     </div>
                     <div>
                         <label className="font-bold text-black">Estados</label>
                         <select
-                            name="ID_type_user"
-                            // value={values.ID_type_user}
-                            // onChange={handleChange}
+                            name="stateFilter"
+                            value={selectedStateId}
+                            onChange={handleStateFilterChange}
                             className="border border-gray-300 rounded-md p-2 ml-2"
                         >
-                            <option value={1}>Completado</option>
-                            <option value={2}>aca van los estados traidos por el back</option>
+                            <option value="">Todos los estados</option>
+                            {Array.isArray(generalTaskState) && generalTaskState.map((state: any) => (
+                                <option key={state.ID_general_task_states} value={state.ID_general_task_states}>
+                                    {state.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
                 </nav>
                 <article className="w-full">
                     <section className="h-auto w-full flex items-center flex-col">
-                        {Array.isArray(generalTask) && generalTask.length > 0 ? (
-                            generalTask.map((general: any) => (
+                        {Array.isArray(processedTasks) && processedTasks.length > 0 ? (
+                            processedTasks.map((general: any) => (
                                 <div className="w-full" key={general.ID_general_tasks}>
                                     <Card generalTask={general} />
                                 </div>
