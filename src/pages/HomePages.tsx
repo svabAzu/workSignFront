@@ -2,15 +2,19 @@ import Card, { getTaskPriority } from "../components/card/Card";
 import { useState, useEffect, useMemo } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { useGeneralTask } from "../context/GeneralTaskContext";
+import { Pagination } from "../components/card/Pagination";
+
 
 export const HomePages = () => {
-    const handleSearchChange = (e: any) => {
-        setBusqueda(e.target.value);
-    };
-
     const [busqueda, setBusqueda] = useState("");
     const [sortOrder, setSortOrder] = useState<'none' | 'desc' | 'asc'>('none');
     const [selectedStateId, setSelectedStateId] = useState<string>(''); // '' para "Todos"
+    const [currentPage, setCurrentPage] = useState(1);
+    const [tasksPerPage] = useState(4); // Número de tarjetas por página
+
+    const handleSearchChange = (e: any) => {
+        setBusqueda(e.target.value);
+    };
 
     const { generalTask, getGeneralTask, generalTaskState, getGeneralTaskState } = useGeneralTask();
 
@@ -22,6 +26,11 @@ export const HomePages = () => {
         getGeneralTask();
         getGeneralTaskState();
     }, []);
+
+    // Resetear a la página 1 cuando los filtros cambian
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedStateId, busqueda, sortOrder]);
 
     const handleSortByPriority = () => {
         setSortOrder(prevOrder => {
@@ -67,6 +76,18 @@ export const HomePages = () => {
         }
         return filteredTasks;
     }, [generalTask, sortOrder, selectedStateId, busqueda]);
+
+    // Lógica de paginación memoizada
+    const { currentTasks, totalPages } = useMemo(() => {
+        const indexOfLastTask = currentPage * tasksPerPage;
+        const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+        const tasksForPage = processedTasks.slice(indexOfFirstTask, indexOfLastTask);
+        return { currentTasks: tasksForPage, totalPages: Math.ceil(processedTasks.length / tasksPerPage) };
+    }, [currentPage, tasksPerPage, processedTasks]);
+
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
         <div className="flex flex-col items-start w-[100%]  justify-center pt-8 bg-[#F1F1F1]">
@@ -117,17 +138,24 @@ export const HomePages = () => {
                 </nav>
                 <article className="w-full">
                     <section className="h-auto w-full flex items-center flex-col">
-                        {Array.isArray(processedTasks) && processedTasks.length > 0 ? (
-                            processedTasks.map((general: any) => (
+                        {Array.isArray(currentTasks) && currentTasks.length > 0 ? (
+                            currentTasks.map((general: any) => (
                                 <div className="w-full" key={general.ID_general_tasks}>
                                     <Card generalTask={general} />
                                 </div>
                             ))
                         ) : (
-                            <p>No hay pedidos disponibles</p>
+                            <p className="mt-10 text-gray-500">No hay pedidos que coincidan con los filtros seleccionados.</p>
                         )}
                     </section>
                 </article>
+                {totalPages > 1 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                )}
             </section>
         </div>
     )
