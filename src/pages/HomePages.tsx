@@ -90,73 +90,84 @@ export const HomePages = () => {
     };
 
     return (
-        <div className="flex flex-col items-start w-[100%]  justify-center pt-8 bg-[#F1F1F1]">
+        <div className="flex flex-col items-center pt-8 w-full justify-center bg-[#F1F1F1]">
+  <section className="w-[98%] h-auto my-4 rounded-3xl min-h-[90dvh] bg-white flex flex-col p-4 sm:p-6 shadow-lg">
+    {/* Barra de filtros */}
+    <nav className="bg-custom-blue w-full flex flex-col sm:flex-row rounded-b-2xl justify-between items-center px-3 sm:px-5 py-3 sm:py-0 gap-3 sm:gap-0">
+      {/* Buscador */}
+      <div className="w-full sm:w-auto">
+        <form onSubmit={(e) => e.preventDefault()} className="w-full">
+          <input
+            type="search"
+            placeholder="Buscar..."
+            value={busqueda}
+            onChange={handleSearchChange}
+            className="border border-gray-200 p-2 rounded w-full sm:w-52"
+          />
+        </form>
+      </div>
 
+      {/* Botón Prioridad */}
+      <div className="w-full sm:w-auto">
+        <button
+          onClick={handleSortByPriority}
+          className="w-full sm:w-auto flex items-center justify-center rounded-4xl pl-5 pr-3 py-2 bg-[#199431] text-white font-bold"
+        >
+          Prioridad {sortOrder === 'desc' ? (
+            <MdArrowDropUp className="w-6 h-6" />
+          ) : (
+            <MdArrowDropDown className="w-6 h-6" />
+          )}
+        </button>
+      </div>
 
+      {/* Filtro Estados */}
+      <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start">
+        <label className="font-bold text-black mr-2">Estados</label>
+        <select
+          name="stateFilter"
+          value={selectedStateId}
+          onChange={handleStateFilterChange}
+          className="border border-gray-300 rounded-md p-2 w-full sm:w-auto"
+        >
+          <option value="">Todos</option>
+          {Array.isArray(generalTaskState) &&
+            generalTaskState.map((state: any) => (
+              <option key={state.ID_general_task_states} value={state.ID_general_task_states}>
+                {state.name}
+              </option>
+            ))}
+        </select>
+      </div>
+    </nav>
 
-            <section className="w-[98%] h-auto my-4 rounded-4xl min-h-[98dvh] bg-white  items-center flex flex-col p-6 shadow-lg">
-                <nav className=" bg-custom-blue w-full h-20 flex rounded-b-2xl justify-between items-center px-5">
-                    <div>
-                        <form onSubmit={(e) => e.preventDefault()}>
-                            <input
-                                type="search"
-                                placeholder="Buscar..."
-                                value={busqueda}
-                                onChange={handleSearchChange}
-                                className="border border-gray-200 p-2 rounded w-52 mr-10"
-                            />
-                        </form>
-                    </div>
-                    <div>
-                        <button
-                            onClick={handleSortByPriority}
-                            className="flex items-center justify-center rounded-4xl pl-5 bg-[#199431] text-white font-bold"
-                        >
-                            Prioridad {sortOrder === 'desc' ? (
-                                <MdArrowDropUp className="w-8 h-8" />
-                            ) : (
-                                <MdArrowDropDown className="w-8 h-8" />
-                            )}
-                        </button>
-                    </div>
-                    <div>
-                        <label className="font-bold text-black">Estados</label>
-                        <select
-                            name="stateFilter"
-                            value={selectedStateId}
-                            onChange={handleStateFilterChange}
-                            className="border border-gray-300 rounded-md p-2 ml-2"
-                        >
-                            <option value="">Todos los estados</option>
-                            {Array.isArray(generalTaskState) && generalTaskState.map((state: any) => (
-                                <option key={state.ID_general_task_states} value={state.ID_general_task_states}>
-                                    {state.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </nav>
-                <article className="w-full">
-                    <section className="h-auto w-full flex items-center flex-col">
-                        {Array.isArray(currentTasks) && currentTasks.length > 0 ? (
-                            currentTasks.map((general: any) => (
-                                <div className="w-full" key={general.ID_general_tasks}>
-                                    <Card generalTask={general} />
-                                </div>
-                            ))
-                        ) : (
-                            <p className="mt-10 text-gray-500">No hay pedidos que coincidan con los filtros seleccionados.</p>
-                        )}
-                    </section>
-                </article>
-                {totalPages > 1 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
-                )}
-            </section>
-        </div>
+    {/* Lista de Cards */}
+    <article className="w-full">
+      <section className="w-full flex flex-col items-center">
+        {Array.isArray(currentTasks) && currentTasks.length > 0 ? (
+          currentTasks.map((general: any) => (
+            <div className="w-full" key={general.ID_general_tasks}>
+              <Card generalTask={general} />
+            </div>
+          ))
+        ) : (
+          <p className="mt-10 text-gray-500 text-center">
+            No hay pedidos que coincidan con los filtros seleccionados.
+          </p>
+        )}
+      </section>
+    </article>
+
+    {/* Paginación */}
+    {totalPages > 1 && (
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+    )}
+  </section>
+</div>
+
     )
 }
