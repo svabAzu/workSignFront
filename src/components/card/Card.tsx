@@ -64,75 +64,76 @@ const Card = ({ generalTask }: { generalTask: any }) => {
   return (
     <>
       <Link
-        to={`/generalTask/${generalTask.ID_general_tasks}`}
-        className="h-auto flex justify-start rounded-lg my-4 mx-4 py-4 border-solid border-2 shadow-xl gap-4"
-        style={{
-          borderColor: generalTask.generalTaskState?.color_code || '#ACACAE',
-        }}
-      >
-        <div
-          className="w-30 h-30 ml-5 bg-gray-200 rounded-full overflow-hidden border border-gray-300 cursor-pointer flex-shrink-0"
-          onClick={handleImageClick}
-        >
-          <img
-            src={imageUrl}
-            alt={`Imagen de ${generalTask.title}`}
-            className="object-cover w-full h-full"
-          />
-        </div>
-        <div className="flex w-[80%]">
-          <div className="flex w-full justify-between items-center">
-            <div className="w-auto flex flex-col gap-3 text-left">
-              <h1 className="text-xl text-custom-green font-bold">{generalTask.title}</h1>
-              <h2 className="text-base">
-                <span className="font-bold">Cliente: </span>
-                {generalTask.client?.name || generalTask.company || 'Sin cliente'}
-              </h2>
-              <h2 className="text-base">
-                <span className="font-bold">Descripción: </span>
-                {generalTask.description}
-              </h2>
-            </div>
-            <div className="w-auto flex flex-col gap-1 text-left">
-              <h2 className="text-base">
-                <span className="font-bold">Fecha de entrega</span>
-              </h2>
-              <div className="w-35 h-10 flex mb-3 items-center justify-center  border-2 border-black rounded bg-white text-black font-bold">
-                {generalTask.estimated_delivery_date?.slice(0, 10) || 'Sin fecha'}
-              </div>
-              <h2 className="text-base">
-                <span className="font-bold">Estado: </span>
-                {generalTask.generalTaskState?.name || 'Sin estado'}
-              </h2>
-            </div>
-            <div
-              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300"
-              style={{
-                backgroundColor: trafficLightColor || generalTask.generalTaskState?.color_code || '#A9A9A9',
-              }}
-            ></div>
-          </div>
-        </div>
-      </Link>
+  to={`/generalTask/${generalTask.ID_general_tasks}`}
+  className="flex flex-col sm:flex-row justify-start rounded-lg my-4 mx-2 sm:mx-4 py-4 border-2 shadow-xl gap-4 p-4"
+  style={{ borderColor: generalTask.generalTaskState?.color_code || '#ACACAE' }}
+>
+  {/* Imagen */}
+  <div
+    className="w-24 h-24 sm:w-30 sm:h-30 bg-gray-200 rounded-full overflow-hidden border border-gray-300 cursor-pointer flex-shrink-0 mx-auto sm:mx-0"
+    onClick={handleImageClick}
+  >
+    <img
+      src={imageUrl}
+      alt={`Imagen de ${generalTask.title}`}
+      className="object-cover w-full h-full"
+    />
+  </div>
+
+  {/* Contenido */}
+  <div className="flex flex-col sm:flex-row w-full justify-between gap-4 sm:gap-0">
+    <div className="flex flex-col gap-3 text-left">
+      <h1 className="text-lg sm:text-xl text-custom-green font-bold">{generalTask.title}</h1>
+      <h2 className="text-sm sm:text-base">
+        <span className="font-bold">Cliente: </span>
+        {generalTask.client?.name || generalTask.company || 'Sin cliente'}
+      </h2>
+      <h2 className="text-sm sm:text-base">
+        <span className="font-bold">Descripción: </span>
+        {generalTask.description}
+      </h2>
+    </div>
+    <div className="flex flex-col gap-2 text-left">
+      <h2 className="text-sm sm:text-base font-bold">Fecha de entrega</h2>
+      <div className="w-full sm:w-35 h-10 flex items-center justify-center border-2 border-black rounded bg-white text-black font-bold">
+        {generalTask.estimated_delivery_date?.slice(0, 10) || 'Sin fecha'}
+      </div>
+      <h2 className="text-sm sm:text-base">
+        <span className="font-bold">Estado: </span>
+        {generalTask.generalTaskState?.name || 'Sin estado'}
+      </h2>
+    </div>
+    <div
+      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-gray-300"
+      style={{
+        backgroundColor: trafficLightColor || generalTask.generalTaskState?.color_code || '#A9A9A9',
+      }}
+    ></div>
+  </div>
+</Link>
 
       {isImageModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/60  z-50 flex justify-center items-center"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-white p-1 rounded-lg shadow-xl max-w-4xl max-h-[80vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-3 text-white text-4xl leading-none font-bold hover:text-gray-700"
-            >
-              &times;
-            </button>
-            <img src={imageUrl} alt={`Imagen ampliada de ${generalTask.title}`} className="object-contain max-w-full max-h-[75vh]" />
-          </div>
-        </div>
+       <div
+    className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4"
+    onClick={closeModal}
+  >
+    <div
+      className="relative bg-white p-1 rounded-lg shadow-xl max-w-full sm:max-w-4xl max-h-[80vh] w-full"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={closeModal}
+        className="absolute top-2 right-3 text-black text-3xl sm:text-4xl font-bold hover:text-gray-700"
+      >
+        &times;
+      </button>
+      <img
+        src={imageUrl}
+        alt={`Imagen ampliada de ${generalTask.title}`}
+        className="object-contain max-w-full max-h-[75vh] mx-auto"
+      />
+    </div>
+  </div>
       )}
     </>
   );
