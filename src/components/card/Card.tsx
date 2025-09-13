@@ -16,9 +16,15 @@ export const getTaskPriority = (
     return 0; // Fechas inválidas
   }
 
-  // Si la tarea ya pasó o es hoy, es de máxima prioridad.
-  if (now >= deliveryDate) {
-    return 3; // Rojo (máxima prioridad)
+  // Normalizar 'now' y 'deliveryDate' para comparar solo la fecha (sin la hora)
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const deliveryDay = new Date(deliveryDate.getFullYear(), deliveryDate.getMonth(), deliveryDate.getDate());
+
+  // Si la fecha de entrega es hoy, es de máxima prioridad.
+  if (today.getTime() === deliveryDay.getTime()) {
+    return 3; // Rojo (máxima prioridad porque es hoy)
+  } else if (today > deliveryDay) {
+    return 3; // Rojo si la fecha ya pasó (atrasado)
   }
 
   // Si la tarea aún no ha comenzado, es de baja prioridad.
@@ -35,6 +41,24 @@ export const getTaskPriority = (
   return 1; // Verde: más de dos semanas
 };
 
+const getDaysRemaining = (deliveryDateStr?: string): number | string => {
+  if (!deliveryDateStr) {
+    return "-";
+  }
+  const deliveryDate = new Date(deliveryDateStr);
+  const now = new Date();
+
+  if (isNaN(deliveryDate.getTime())) {
+    return "-"; // Fecha inválida
+  }
+
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const deliveryDay = new Date(deliveryDate.getFullYear(), deliveryDate.getMonth(), deliveryDate.getDate());
+
+  const timeDiff = deliveryDay.getTime() - today.getTime();
+  return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+};
+
 const getTrafficLightColor = (priority: number): string | undefined => {
   if (priority === 3) return "#dc3545"; // Rojo
   if (priority === 2) return "#ffc107"; // Amarillo
@@ -47,6 +71,10 @@ const Card = ({ generalTask }: { generalTask: any }) => {
 
   const trafficLightColor = getTrafficLightColor(
     getTaskPriority(generalTask.creation_date, generalTask.estimated_delivery_date)
+  );
+
+  const daysRemaining = getDaysRemaining(
+    generalTask.estimated_delivery_date
   );
 
   const imageUrl = generalTask.sketch_url ? `${import.meta.env.VITE_API_URL}/${generalTask.sketch_url}` : '/iconos/default-avatar.png';
@@ -106,11 +134,13 @@ const Card = ({ generalTask }: { generalTask: any }) => {
               </h2>
             </div>
             <div
-              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300"
+              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center text-white font-bold text-sm"
               style={{
                 backgroundColor: trafficLightColor || generalTask.generalTaskState?.color_code || '#A9A9A9',
               }}
-            ></div>
+            >
+              {daysRemaining}
+            </div>
           </div>
         </div>
       </Link>
