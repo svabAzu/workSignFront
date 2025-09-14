@@ -134,35 +134,37 @@ const Card = ({ generalTask }: { generalTask: any }) => {
               </h2>
             </div>
             <div
-              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center text-white font-bold text-sm"
+              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300"
               style={{
                 backgroundColor: trafficLightColor || generalTask.generalTaskState?.color_code || '#A9A9A9',
               }}
-            >
-              {daysRemaining}
-            </div>
+            ></div>
           </div>
         </div>
       </Link>
 
       {isImageModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/60  z-50 flex justify-center items-center"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-white p-1 rounded-lg shadow-xl max-w-4xl max-h-[80vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-3 text-white text-4xl leading-none font-bold hover:text-gray-700"
-            >
-              &times;
-            </button>
-            <img src={imageUrl} alt={`Imagen ampliada de ${generalTask.title}`} className="object-contain max-w-full max-h-[75vh]" />
-          </div>
-        </div>
+       <div
+    className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4"
+    onClick={closeModal}
+  >
+    <div
+      className="relative bg-white p-1 rounded-lg shadow-xl max-w-full sm:max-w-4xl max-h-[80vh] w-full"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={closeModal}
+        className="absolute top-2 right-3 text-black text-3xl sm:text-4xl font-bold hover:text-gray-700"
+      >
+        &times;
+      </button>
+      <img
+        src={imageUrl}
+        alt={`Imagen ampliada de ${generalTask.title}`}
+        className="object-contain max-w-full max-h-[75vh] mx-auto"
+      />
+    </div>
+  </div>
       )}
     </>
   );

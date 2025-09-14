@@ -125,234 +125,237 @@ export const RegisterForm = () => {
 
   if (showSuccessModal) {
     return (
-      <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
-        <div className="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
-          <h2 className="text-2xl font-bold text-green-600 mb-4">
-            ¡Registro Exitoso!
-          </h2>
-          <p className="mb-6">El usuario ha sido registrado correctamente.</p>
-          <button
-            onClick={() => {
-              setShowSuccessModal(false);
-              resetForm();
-            }}
-            className="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 transition-colors"
-          >
-            Aceptar
-          </button>
-        </div>
-      </div>
+      <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50 p-4">
+  <div className="bg-white p-6 sm:p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
+    <h2 className="text-xl sm:text-2xl font-bold text-green-600 mb-4">
+      ¡Registro Exitoso!
+    </h2>
+    <p className="mb-6 text-sm sm:text-base">
+      El usuario ha sido registrado correctamente.
+    </p>
+    <button
+      onClick={() => {
+        setShowSuccessModal(false);
+        resetForm();
+      }}
+      className="bg-green-600 text-white font-bold py-2 px-4 sm:px-6 rounded-full hover:bg-green-700 transition-colors w-full sm:w-auto"
+    >
+      Aceptar
+    </button>
+  </div>
+</div>
     );
   }
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-xl max-w-5xl mx-auto"
-    >
-      <h1 className="text-green-600 font-bold text-2xl mb-6 uppercase tracking-wide">
-        Registro de usuarios:
-      </h1>
+  onSubmit={handleSubmit}
+  className="bg-white p-4 sm:p-6 rounded-xl max-w-5xl mx-auto w-full"
+>
+  <h1 className="text-green-600 font-bold text-xl sm:text-2xl mb-6 uppercase tracking-wide text-center sm:text-left">
+    Registro de usuarios:
+  </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4">
-          <div>
-            <label className="block font-bold text-black uppercase">
-              Nombre <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="name"
-              value={values.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.name && errors.name && (
-              <div className="text-red-500 text-xs mt-1">{errors.name}</div>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold text-black uppercase">
-              Apellido <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="last_name"
-              value={values.last_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.last_name && errors.last_name && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.last_name}
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold text-black uppercase">
-              DNI <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="dni"
-              value={values.dni}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.dni && errors.dni && (
-              <div className="text-red-500 text-xs mt-1">{errors.dni}</div>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold text-black uppercase">
-              Correo
-            </label>
-            <input
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.email && errors.email && (
-              <div className="text-red-500 text-xs mt-1">{errors.email}</div>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold text-black uppercase">
-              Teléfono
-            </label>
-            <input
-              name="phone"
-              value={values.phone}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.phone && errors.phone && (
-              <div className="text-red-500 text-xs mt-1">{errors.phone}</div>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold text-black uppercase">
-              Contraseña <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="password"
-              type="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.password && errors.password && (
-              <div className="text-red-500 text-xs mt-1">{errors.password}</div>
-            )}
-          </div>
-        </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+    {/* Columna izquierda */}
+    <div className="flex flex-col gap-4">
+      {/* Nombre */}
+      <div>
+        <label className="block font-bold text-black uppercase text-sm sm:text-base">
+          Nombre <span className="text-red-500">*</span>
+        </label>
+        <input
+          name="name"
+          value={values.name}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
+        />
+        {touched.name && errors.name && (
+          <div className="text-red-500 text-xs mt-1">{errors.name}</div>
+        )}
+      </div>
 
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-              {values.avatar_url && (
-                <img
-                  src={URL.createObjectURL(values.avatar_url)}
-                  alt="preview"
-                  className="object-cover w-full h-full"
-                />
-              )}
-            </div>
-            <input
-              type="file"
-              id="avatar_url"
-              name="avatar_url"
-              accept="image/*"
-              onChange={(e) =>
-                setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
-              }
-              onBlur={handleBlur}
-              className="text-sm"
+      {/* Apellido */}
+      <div>
+        <label className="block font-bold text-black uppercase text-sm sm:text-base">
+          Apellido <span className="text-red-500">*</span>
+        </label>
+        <input
+          name="last_name"
+          value={values.last_name}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
+        />
+        {touched.last_name && errors.last_name && (
+          <div className="text-red-500 text-xs mt-1">{errors.last_name}</div>
+        )}
+      </div>
+
+      {/* DNI */}
+      <div>
+        <label className="block font-bold text-black uppercase text-sm sm:text-base">
+          DNI <span className="text-red-500">*</span>
+        </label>
+        <input
+          name="dni"
+          value={values.dni}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
+        />
+        {touched.dni && errors.dni && (
+          <div className="text-red-500 text-xs mt-1">{errors.dni}</div>
+        )}
+      </div>
+
+      {/* Email */}
+      <div>
+        <label className="block font-bold text-black uppercase text-sm sm:text-base">
+          Correo
+        </label>
+        <input
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
+        />
+      </div>
+
+      {/* Teléfono */}
+      <div>
+        <label className="block font-bold text-black uppercase text-sm sm:text-base">
+          Teléfono
+        </label>
+        <input
+          name="phone"
+          value={values.phone}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
+        />
+      </div>
+
+      {/* Password */}
+      <div>
+        <label className="block font-bold text-black uppercase text-sm sm:text-base">
+          Contraseña <span className="text-red-500">*</span>
+        </label>
+        <input
+          name="password"
+          type="password"
+          value={values.password}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
+        />
+      </div>
+    </div>
+
+    {/* Columna derecha */}
+    <div className="flex flex-col gap-4">
+      {/* Imagen */}
+      <div className="flex flex-col sm:flex-row items-center gap-4">
+        <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+          {values.avatar_url && (
+            <img
+              src={URL.createObjectURL(values.avatar_url)}
+              alt="preview"
+              className="object-cover w-full h-full"
             />
-          </div>
-          {touched.avatar_url && errors.avatar_url && (
-            <div className="text-red-500 text-xs mt-1">
-              {errors.avatar_url as string}
-            </div>
           )}
+        </div>
+        <input
+          type="file"
+          id="avatar_url"
+          name="avatar_url"
+          accept="image/*"
+          onChange={(e) =>
+            setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
+          }
+          onBlur={handleBlur}
+          className="text-sm"
+        />
+      </div>
 
-          <div>
-            <label className="font-bold text-black">Usuario</label>
-            <select
-              name="ID_type_user"
-              value={values.ID_type_user}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 ml-2"
+      {/* Usuario */}
+      <div>
+        <label className="font-bold text-black">Usuario</label>
+        <select
+          name="ID_type_user"
+          value={values.ID_type_user}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className="border border-gray-300 rounded-md p-2 ml-0 sm:ml-2 w-full sm:w-auto"
+        >
+          <option value={1}>Administrador</option>
+          <option value={2}>Operador</option>
+        </select>
+      </div>
+
+      {/* Roles */}
+      <div>
+        <label className="font-bold text-black block mb-2">
+          Roles (selecciona uno o más)
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {roles.map((r) => (
+            <label
+              key={r.id}
+              className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
             >
-              <option value={1}>Administrador</option>
-              <option value={2}>Operador</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="font-bold text-black block mb-2">
-              Roles (selecciona uno o más)
+              <input
+                type="checkbox"
+                value={r.id}
+                checked={values.specialties.includes(r.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setFieldValue("specialties", [
+                      ...values.specialties,
+                      r.id,
+                    ]);
+                  } else {
+                    setFieldValue(
+                      "specialties",
+                      values.specialties.filter((roleId) => roleId !== r.id)
+                    );
+                  }
+                }}
+                onBlur={handleBlur}
+                className="accent-green-600"
+              />
+              {r.name}
             </label>
-            <div className="grid grid-cols-2 gap-2">
-              {roles.map((r) => (
-                <label
-                  key={r.id}
-                  className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    value={r.id}
-                    checked={values.specialties.includes(r.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setFieldValue("specialties", [
-                          ...values.specialties,
-                          r.id,
-                        ]);
-                      } else {
-                        setFieldValue(
-                          "specialties",
-                          values.specialties.filter((roleId) => roleId !== r.id)
-                        );
-                      }
-                    }}
-                    onBlur={handleBlur}
-                    className="accent-green-600"
-                  />
-                  {r.name}
-                </label>
-              ))}
-            </div>
-            {touched.specialties && errors.specialties && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.specialties as string}
-              </div>
-            )}
-          </div>
+          ))}
         </div>
       </div>
+    </div>
+  </div>
 
-      <div className="flex justify-center mt-6">
-        <button
-          type="submit"
-          className="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700"
+  <div className="flex justify-center mt-6">
+    <button
+      type="submit"
+      className="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 w-full sm:w-auto"
+    >
+      Registrar
+    </button>
+  </div>
+
+  {authErrors.length > 0 && (
+    <div className="mt-4">
+      {authErrors.map((error, i) => (
+        <div
+          className="bg-red-600 text-white text-center py-1 rounded-md mb-2"
+          key={i}
         >
-          Registrar
-        </button>
-      </div>
+          {error}
+        </div>
+      ))}
+    </div>
+  )}
+</form>
 
-      <div className="">
-        {authErrors.map((error, i) => (
-          <div className="bg-red-600" key={i}>
-            {error}
-          </div>
-        ))}
-      </div>
-    </form>
   );
 };

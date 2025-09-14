@@ -40,75 +40,89 @@ export const LoginPages = () => {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-[95vh] pt-8 bg-[#F1F1F1]">
-      <div className="h-[95%] w-[98%] bg-[#F1F1F1] rounded-4xl flex justify-center">
-        <section className="w-1/2 flex flex-col items-center justify-center gap-4 ">
-          <img className="max-h-[40%] w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
-          <h1 className="text-6xl font-bold">BIENVENIDO</h1>
-        </section>
+  <div className="flex flex-col items-center justify-center min-h-screen bg-[#F1F1F1] p-6">
+  <div className="flex flex-col md:flex-row justify-center items-center bg-[#F1F1F1] rounded-4xl w-11/12 max-w-7xl">
+    
+    <section className="w-full md:w-1/2 flex flex-col items-center justify-center gap-6 py-10">
+      <img
+        className="w-24 sm:w-32 md:w-48 lg:w-56 transition-all duration-300"
+        src="/iconos/WorkSign-Engranaje.png"
+        alt="Isotipo de la empresa"
+      />
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center">
+        BIENVENIDO
+      </h1>
+    </section>
 
-        <div className="h-full w-1/2 flex items-center ">
-          <div className="bg-[#F1F1F1] w-[80%] flex items-center flex-col h-auto rounded-xl shadow-gray-500 shadow-lg">
-            <div className="w-full flex justify-center items-center py-4 rounded-t-lg  bg-custom-green"></div>
-            <form onSubmit={handleSubmit} onReset={handleReset} className="w-[80%] flex flex-col mt-5 mb-5">
-              <h2 className="text-black mt-3 font-bold mb-1">Usuario</h2>
-              <input
-                className="border border-gray-400 p-2 rounded flex justify-center"
-                type="email"
-                placeholder="usuario@example.com"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                autoComplete="off"
-              />
-              {errors.email && (
-                <span className="text-custom-yellow text-xs">Email invalido</span>
-              )}
-              <br />
-              <h2 className="text-black mb-1 font-bold mt-1">Contraseña</h2>
-              <div className="relative w-full">
-                <input
-                  className="border border-gray-400 p-2 rounded flex justify-center w-full"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="•••••••••"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  autoComplete="off"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
-                >
-                  {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                </button>
-              </div>
-              {errors.password && (
-                <span className="text-custom-yellow text-xs">
-                  Password invalido
-                </span>
-              )}
+    
+    <div className="w-full md:w-1/2 flex justify-center p-6">
+      <div className="bg-[#F1F1F1] w-full max-w-lg flex flex-col items-center rounded-xl shadow-gray-500 shadow-lg">
+        <div className="w-full py-5 rounded-t-lg bg-custom-green"></div>
 
-              <div className="w-full flex flex-col items-center justify-center">
-                {authErrors.map((error, i) => (
-                  <div className="text-custom-yellow my-1 text-xs" key={i}>
-                    {error}
-                  </div>
-                ))}
-                <div className="w-full mb-5 flex items-center justify-center">
-                  <button
-                    className=" flex justify-center items-center mt-5 p-6 w-40 h-10 bg-black text-[#ffff] font-bold border-2 border-transparent hover:bg-green-600 rounded-2xl transition-colors duration-200 "
-                    type="submit"
-                  >
-                    Ingresar
-                  </button>
-                </div>
-              </div>
-            </form>
+        <form
+          onSubmit={handleSubmit}
+          onReset={handleReset}
+          className="w-[80%] flex flex-col mt-6 mb-6"
+        >
+          
+          <h2 className="text-black mt-4 font-bold mb-2">Usuario</h2>
+          <input
+            className="border border-gray-400 p-3 rounded w-full"
+            type="email"
+            placeholder="usuario@example.com"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+            autoComplete="off"
+          />
+          {errors.email && (
+            <span className="text-[#DC3545] text-xs">Email inválido</span>
+          )}
+
+          
+          <h2 className="text-black mt-4 font-bold mb-2">Contraseña</h2>
+          <div className="relative w-full">
+            <input
+              className="border border-gray-400 p-3 rounded w-full"
+              type={showPassword ? "text" : "password"}
+              placeholder="•••••••••"
+              name="password"
+              value={values.password}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+            >
+              {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+            </button>
           </div>
-        </div>
+          {errors.password && (
+            <span className="text-[#DC3545] text-xs">Contraseña inválida</span>
+          )}
+
+          
+          <div className="w-full flex flex-col items-center mt-4">
+            {authErrors.map((error, i) => (
+              <div key={i} className="text-custom-yellow my-1 text-xs">
+                {error}
+              </div>
+            ))}
+            <button
+              className="mt-6 w-44 h-12 hover:bg-[#ADC708] text-white hover:text-black font-bold rounded-2xl border-2 border-transparent bg-green-600 transition-colors duration-200"
+              type="submit"
+            >
+              Ingresar
+            </button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
+</div>
+
+
   );
 };
