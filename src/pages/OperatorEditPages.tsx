@@ -1,12 +1,11 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useGeneralTask } from "../context/GeneralTaskContext";
 import * as Yup from "yup";
-import axios from "axios";
 
 interface User {
-  id: number;
+  ID_users: number;
   name: string;
   last_name: string;
   password: string;
@@ -30,32 +29,34 @@ interface RegisterFormValues {
   ID_type_user: number;
 }
 
-export const EditUserForm = () => {
-  const { authErrors } = useAuth();
-  const [users, setUsers] = useState<User[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState<number | "">("");
+export const OperatorEditPages = () => {
+  const { operatorUsers, getOperatorUser, updateOperatorUser } =
+    useGeneralTask();
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const roles = [
-    { id: 1, name: "Plegador" },
-    { id: 2, name: "Pintor" },
-    { id: 3, name: "Soldador" },
-    { id: 4, name: "Maquinario" },
-    { id: 5, name: "Diseñador" },
-    { id: 6, name: "Electricista" },
-    { id: 7, name: "Obrero" },
-    { id: 8, name: "Técnico" },
-  ];
+  const { getSpecialties, specialties } = useGeneralTask();
+
+  useEffect(() => {
+    getSpecialties();
+    getOperatorUser();
+  }, []);
+
+  console.log(operatorUsers);
 
   const schema = Yup.object().shape({
     name: Yup.string().required("El nombre es obligatorio"),
     last_name: Yup.string().required("El apellido es obligatorio"),
     dni: Yup.string().required("El DNI es obligatorio"),
-    email: Yup.string().email("Email inválido").required("El correo es obligatorio"),
+    email: Yup.string()
+      .email("Email inválido")
+      .required("El correo es obligatorio"),
     phone: Yup.string().required("El teléfono es obligatorio"),
     password: Yup.string().min(4, "Mínimo 4 caracteres"),
-    specialties: Yup.array().of(Yup.number()).min(1, "Selecciona al menos un rol"),
+    specialties: Yup.array()
+      .of(Yup.number())
+      .min(1, "Selecciona al menos un rol"),
     ID_type_user: Yup.number().required("El tipo de usuario es obligatorio"),
   });
 
@@ -78,31 +79,34 @@ export const EditUserForm = () => {
       avatar_url: null,
       specialties: [],
       dni: "",
-      ID_type_user: 1,
+      ID_type_user: 2, // Default to Operator
     },
     validationSchema: schema,
-    onSubmit: async (values) => {
-      if (!selectedUserId) return;
+
+    onSubmit: async (formValues) => {
+      if (selectedUserId === null) return;
       setLoading(true);
 
       try {
         const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("last_name", values.last_name);
-        if (values.password) formData.append("password", values.password);
-        formData.append("email", values.email);
-        formData.append("phone", values.phone);
-        formData.append("dni", values.dni);
-        formData.append("ID_type_user", values.ID_type_user.toString());
-        formData.append("specialties", JSON.stringify(values.specialties));
+        formData.append("name", formValues.name);
+        formData.append("last_name", formValues.last_name);
+        if (formValues.password)
+          formData.append("password", formValues.password);
+        formData.append("email", formValues.email);
+        formData.append("phone", formValues.phone);
+        formData.append("dni", formValues.dni);
+        formData.append("ID_type_user", formValues.ID_type_user.toString());
+        formData.append("specialties", JSON.stringify(formValues.specialties));
 
-        if (values.avatar_url) {
-          formData.append("avatar", values.avatar_url);
+        if (formValues.avatar_url) {
+          formData.append("avatar", formValues.avatar_url);
         }
 
-        await axios.put(`/api/users/${selectedUserId}`, formData);
+        //await updateUser(selectedUserId, formData);
+
         alert("Usuario actualizado con éxito");
-        navigate(0); // refrescar
+        navigate(0);
       } catch (error) {
         console.error(error);
         alert("Error al actualizar el usuario");
@@ -112,54 +116,15 @@ export const EditUserForm = () => {
     },
   });
 
-  // Cargar usuarios
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get("/api/users");
-        setUsers(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchUsers();
-  }, []);
-
-  // Rellenar datos al seleccionar usuario
-  useEffect(() => {
-    if (!selectedUserId) {
-      resetForm();
-      return;
-    }
-    const user = users.find((u) => u.id === selectedUserId);
-    if (user) {
-      setFieldValue("name", user.name);
-      setFieldValue("last_name", user.last_name);
-      setFieldValue("email", user.email);
-      setFieldValue("phone", user.phone);
-      setFieldValue("dni", user.dni);
-      setFieldValue("specialties", user.specialties || []);
-      setFieldValue("ID_type_user", user.ID_type_user);
-    }
-  }, [selectedUserId, users]);
-
-  const handleDelete = async () => {
-    if (!selectedUserId) return;
-    if (!confirm("¿Seguro que quieres dar de baja a este usuario?")) return;
-
-    try {
-      await axios.delete(`/api/users/${selectedUserId}`);
-      alert("Usuario eliminado");
-      setSelectedUserId("");
-      navigate(0);
-    } catch (error) {
-      console.error(error);
-      alert("Error al eliminar usuario");
-    }
-  };
+const avatarUrl = operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url
+        ? `${import.meta.env.VITE_API_URL}/${operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url}`
+        : "/iconos/default-avatar.png";
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl max-w-5xl mx-auto w-full">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 rounded-xl max-w-5xl mx-auto w-full"
+    >
       <h1 className="text-green-600 font-bold text-2xl mb-6 uppercase tracking-wide">
         Editar Usuario
       </h1>
@@ -168,21 +133,23 @@ export const EditUserForm = () => {
       <div className="mb-6">
         <label className="block font-bold mb-2">Seleccionar Usuario</label>
         <select
-          value={selectedUserId}
-          onChange={(e) => setSelectedUserId(Number(e.target.value))}
+          value={selectedUserId ?? ""}
+          onChange={(e) =>
+            setSelectedUserId(e.target.value ? Number(e.target.value) : null)
+          }
           className="border border-gray-300 rounded-md p-2 w-full"
         >
           <option value="">-- Selecciona un usuario --</option>
-          {users.map((u) => (
-            <option key={u.id} value={u.id}>
-              {u.name} {u.last_name}
-            </option>
-          ))}
+          {Array.isArray(operatorUsers) &&
+            operatorUsers.map((u) => (
+              <option key={u.ID_users} value={u.ID_users}>
+                {u.name} {u.last_name}
+              </option>
+            ))}
         </select>
       </div>
 
-      {/* Campos (igual que tu formulario original, con valores rellenados) */}
-      {/* Nombre */}
+      {/* Campos del formulario */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Columna izquierda */}
         <div className="flex flex-col gap-4">
@@ -190,110 +157,136 @@ export const EditUserForm = () => {
             <label className="block font-bold">Nombre</label>
             <input
               name="name"
-              value={values.name}
+              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.name}
               onChange={handleChange}
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full"
             />
-            {touched.name && errors.name && <p className="text-red-500">{errors.name}</p>}
+            {touched.name && errors.name && (
+              <p className="text-red-500">{errors.name}</p>
+            )}
           </div>
           <div>
             <label className="block font-bold">Apellido</label>
             <input
               name="last_name"
-              value={values.last_name}
+              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.last_name}
               onChange={handleChange}
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full"
             />
+            {touched.last_name && errors.last_name && (
+              <p className="text-red-500">{errors.last_name}</p>
+            )}
           </div>
           <div>
             <label className="block font-bold">DNI</label>
             <input
               name="dni"
-              value={values.dni}
+              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.dni}
               onChange={handleChange}
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full"
             />
+            {touched.dni && errors.dni && (
+              <p className="text-red-500">{errors.dni}</p>
+            )}
           </div>
           <div>
             <label className="block font-bold">Correo</label>
             <input
               name="email"
-              value={values.email}
+              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.email}
               onChange={handleChange}
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full"
             />
+            {touched.email && errors.email && (
+              <p className="text-red-500">{errors.email}</p>
+            )}
           </div>
           <div>
             <label className="block font-bold">Teléfono</label>
             <input
               name="phone"
-              value={values.phone}
+              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.phone}
               onChange={handleChange}
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full"
             />
+            {touched.phone && errors.phone && (
+              <p className="text-red-500">{errors.phone}</p>
+            )}
           </div>
           <div>
             <label className="block font-bold">Contraseña</label>
             <input
               type="password"
               name="password"
-              value={values.password}
+              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.password}
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder="Deja vacío si no quieres cambiarla"
               className="border border-gray-300 rounded-md p-2 w-full"
             />
+            {touched.password && errors.password && (
+              <p className="text-red-500">{errors.password}</p>
+            )}
           </div>
         </div>
 
         {/* Columna derecha */}
         <div className="flex flex-col gap-4">
           {/* Avatar */}
-          <div>
-            <label className="block font-bold">Avatar</label>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+              {operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url && (
+                <img
+                  src={avatarUrl}
+                  alt="preview"
+                  className="object-cover w-full h-full"
+                />
+              )}
+            </div>
             <input
               type="file"
+              id="avatar_url"
               name="avatar_url"
               accept="image/*"
-              onChange={(e) => setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)}
+              onChange={(e) =>
+                setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
+              }
+              onBlur={handleBlur}
+              className="text-sm"
             />
           </div>
-          {/* Usuario */}
-          <div>
-            <label className="block font-bold">Tipo Usuario</label>
-            <select
-              name="ID_type_user"
-              value={values.ID_type_user}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            >
-              <option value={1}>Administrador</option>
-              <option value={2}>Operador</option>
-            </select>
-          </div>
+
           {/* Roles */}
           <div>
-            <label className="block font-bold mb-2">Roles</label>
-            <div className="grid grid-cols-2 gap-2">
-              {roles.map((r) => (
-                <label key={r.id} className="flex items-center gap-2">
+            <label className="block font-bold mb-2">
+              Especialidades (selecciona uno o más)
+            </label>
+            <div className="grid grid-cols-2 gap-2 ">
+              {specialties.map((r) => (
+                <label
+                  key={r.ID_specialty}
+                  className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
+                >
                   <input
                     type="checkbox"
-                    value={r.id}
-                    checked={values.specialties.includes(r.id)}
+                    value={r.ID_specialty}
+                    checked={values.specialties.includes(r.ID_specialty)}
                     onChange={(e) => {
+                      const specialtyId = Number(e.target.value);
                       if (e.target.checked) {
-                        setFieldValue("specialties", [...values.specialties, r.id]);
+                        setFieldValue("specialties", [
+                          ...values.specialties,
+                          specialtyId,
+                        ]);
                       } else {
                         setFieldValue(
                           "specialties",
-                          values.specialties.filter((id) => id !== r.id)
+                          values.specialties.filter((id) => id !== specialtyId)
                         );
                       }
                     }}
@@ -302,6 +295,9 @@ export const EditUserForm = () => {
                 </label>
               ))}
             </div>
+            {touched.specialties && errors.specialties && (
+              <p className="text-red-500">{errors.specialties}</p>
+            )}
           </div>
         </div>
       </div>
@@ -310,15 +306,15 @@ export const EditUserForm = () => {
       <div className="flex justify-between mt-6">
         <button
           type="submit"
-          disabled={!selectedUserId || loading}
+          disabled={selectedUserId === null || loading}
           className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700"
         >
           {loading ? "Guardando..." : "Editar"}
         </button>
         <button
           type="button"
-          onClick={handleDelete}
-          disabled={!selectedUserId}
+          //onClick={handleDelete}
+          disabled={selectedUserId === null}
           className="bg-red-600 text-white py-2 px-6 rounded-full hover:bg-red-700"
         >
           Dar de baja

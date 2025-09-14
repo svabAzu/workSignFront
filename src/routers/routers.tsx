@@ -1,9 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
 import { LoginPages } from "../pages/LoginPages";
-import { RegisterPages, RegisterForm } from "../pages/RegisterPages";
+import { RegisterForm } from "../pages/RegisterPages";
 import { HomePages } from '../pages/HomePages';
 import { ProtectedRouter } from '../hooks/ProtectedRouter';
 import { SettingsPages } from '../pages/SettingsPages';
+import {OperatorEditPages} from '../pages/OperatorEditPages';
+import { SpecialtyPages } from '../pages/SpecialtyPages';
 
 
 export default function MyRouters() {
@@ -16,8 +18,8 @@ export default function MyRouters() {
         {/* <Route path='/register' element={<RegisterPages />} /> */}
         <Route path='/setting' element={<SettingsPages />}>
             <Route path='register' element={<RegisterForm />} />
-            <Route path='edit-operario' element={<div>Editar operario</div>} />
-            <Route path='specialty' element={<div>Especialidades</div>} />
+            <Route path='edit-operario' element={<OperatorEditPages />} />
+            <Route path='specialty' element={<SpecialtyPages />} />
         </Route>
 
       </Route>
