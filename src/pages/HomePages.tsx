@@ -71,7 +71,19 @@ export const HomePages = () => {
             return filteredTasks.sort((a, b) => {
             const priorityA = getTaskPriority(a.creation_date, a.estimated_delivery_date);
             const priorityB = getTaskPriority(b.creation_date, b.estimated_delivery_date);
+
+            if (priorityA !== priorityB) {
+                // Si las prioridades son diferentes, ordena por prioridad.
                 return sortOrder === 'desc' ? priorityB - priorityA : priorityA - priorityB;
+            } else {
+                // Si las prioridades son iguales, ordena por fecha de entrega más próxima.
+                const dateA = a.estimated_delivery_date ? new Date(a.estimated_delivery_date).getTime() : Infinity;
+                const dateB = b.estimated_delivery_date ? new Date(b.estimated_delivery_date).getTime() : Infinity;
+                
+                // 'asc' (menos urgente) pone las fechas más lejanas primero.
+                // 'desc' (más urgente) pone las fechas más cercanas primero.
+                return sortOrder === 'desc' ? dateA - dateB : dateB - dateA;
+            }
             });
         }
         return filteredTasks;
@@ -91,27 +103,27 @@ export const HomePages = () => {
 
     return (
         <div className="flex flex-col items-center pt-8 w-full justify-center bg-[#F1F1F1]">
-  <section className="w-[98%] h-auto my-4 rounded-3xl min-h-[90dvh] bg-white flex flex-col p-4 sm:p-6 shadow-lg">
+  <section className="w-full max-w-7xl mx-auto h-auto my-4 rounded-3xl min-h-[90dvh] bg-white flex flex-col p-4 sm:p-6 shadow-lg">
     {/* Barra de filtros */}
-    <nav className="bg-custom-blue w-full flex flex-col sm:flex-row rounded-b-2xl justify-between items-center px-3 sm:px-5 py-3 sm:py-0 gap-3 sm:gap-0">
+    <nav className="bg-custom-blue w-full flex flex-col md:flex-row rounded-b-2xl justify-between items-center px-4 py-3 gap-4">
       {/* Buscador */}
-      <div className="w-full sm:w-auto">
+      <div className="w-full md:w-auto">
         <form onSubmit={(e) => e.preventDefault()} className="w-full">
           <input
             type="search"
             placeholder="Buscar..."
             value={busqueda}
             onChange={handleSearchChange}
-            className="border border-gray-200 p-2 rounded w-full sm:w-52"
+            className="border border-gray-200 p-2 rounded w-full md:w-52"
           />
         </form>
       </div>
 
-      {/* Botón Prioridad */}
-      <div className="w-full sm:w-auto">
+      <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
+        {/* Botón Prioridad */}
         <button
           onClick={handleSortByPriority}
-          className="w-full sm:w-auto flex items-center justify-center rounded-4xl pl-5 pr-3 py-2 bg-[#199431] text-white font-bold"
+          className="w-full sm:w-auto flex items-center justify-center rounded-full px-5 py-2 bg-[#199431] text-white font-bold"
         >
           Prioridad {sortOrder === 'desc' ? (
             <MdArrowDropUp className="w-6 h-6" />
@@ -119,25 +131,26 @@ export const HomePages = () => {
             <MdArrowDropDown className="w-6 h-6" />
           )}
         </button>
-      </div>
 
-      {/* Filtro Estados */}
-      <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start">
-        <label className="font-bold text-black mr-2">Estados</label>
-        <select
-          name="stateFilter"
-          value={selectedStateId}
-          onChange={handleStateFilterChange}
-          className="border border-gray-300 rounded-md p-2 w-full sm:w-auto"
-        >
-          <option value="">Todos</option>
-          {Array.isArray(generalTaskState) &&
-            generalTaskState.map((state: any) => (
-              <option key={state.ID_general_task_states} value={state.ID_general_task_states}>
-                {state.name}
-              </option>
-            ))}
-        </select>
+        {/* Filtro Estados */}
+        <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2">
+          <label htmlFor="stateFilter" className="font-bold text-black flex-shrink-0">Estados</label>
+          <select
+            id="stateFilter"
+            name="stateFilter"
+            value={selectedStateId}
+            onChange={handleStateFilterChange}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          >
+            <option value="">Todos</option>
+            {Array.isArray(generalTaskState) &&
+              generalTaskState.map((state: any) => (
+                <option key={state.ID_general_task_states} value={state.ID_general_task_states}>
+                  {state.name}
+                </option>
+              ))}
+          </select>
+        </div>
       </div>
     </nav>
 
