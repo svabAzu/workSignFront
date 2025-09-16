@@ -10,6 +10,8 @@ export const verifyTokenRequest = () => axios.get('/verify')
 
 export const logout = () => axios.post(`/logout`)
 
+
+
 interface myFormValues {
     name: string,
     last_name: string,
