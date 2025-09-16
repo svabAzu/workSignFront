@@ -115,6 +115,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
             try {
                 const res = await verifyTokenRequest();
+               
                 if (res.data) {
                     setUser(res.data);
                     setIsAutheticaded(true);

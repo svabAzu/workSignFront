@@ -27,19 +27,13 @@ export const getTaskPriority = (
     return 3; // Rojo si la fecha ya pasó (atrasado)
   }
 
-  // Si la tarea aún no ha comenzado, es de baja prioridad.
-  if (now < creationDate) {
-    return 1; // Verde (baja prioridad)
-  }
-
   const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
-  const TWO_WEEKS_IN_MS = 14 * 24 * 60 * 60 * 1000;
-  const timeRemaining = deliveryDate.getTime() - now.getTime();
+  const timeRemaining = deliveryDay.getTime() - today.getTime();
 
-  if (timeRemaining <= ONE_WEEK_IN_MS) return 3; // Rojo: una semana o menos
-  if (timeRemaining <= TWO_WEEKS_IN_MS) return 2; // Amarillo: dos semanas o menos
-  return 1; // Verde: más de dos semanas
-};
+  // Si falta 1 semana o menos (y no es hoy o pasado), es amarillo.
+  if (timeRemaining <= ONE_WEEK_IN_MS) return 2; // Amarillo
+  return 1; // Verde (más de una semana)
+};  
 
 const getDaysRemaining = (deliveryDateStr?: string): number | string => {
   if (!deliveryDateStr) {
@@ -93,13 +87,13 @@ const Card = ({ generalTask }: { generalTask: any }) => {
     <>
       <Link
         to={`/generalTask/${generalTask.ID_general_tasks}`}
-        className="h-auto flex justify-start rounded-lg my-4 mx-4 py-4 border-solid border-2 shadow-xl gap-4"
+        className="h-auto flex flex-col md:flex-row justify-start rounded-lg my-4 mx-2 sm:mx-4 p-4 border-solid border-2 shadow-xl gap-4"
         style={{
           borderColor: generalTask.generalTaskState?.color_code || '#ACACAE',
         }}
       >
         <div
-          className="w-30 h-30 ml-5 bg-gray-200 rounded-full overflow-hidden border border-gray-300 cursor-pointer flex-shrink-0"
+          className="w-24 h-24 md:w-32 md:h-32 mx-auto md:mx-0 md:ml-5 bg-gray-200 rounded-full overflow-hidden border border-gray-300 cursor-pointer flex-shrink-0"
           onClick={handleImageClick}
         >
           <img
@@ -108,40 +102,44 @@ const Card = ({ generalTask }: { generalTask: any }) => {
             className="object-cover w-full h-full"
           />
         </div>
-        <div className="flex w-[80%]">
-          <div className="flex w-full justify-between items-center">
-            <div className="w-auto flex flex-col gap-3 text-left">
+        <div className="flex flex-col md:flex-row w-full">
+          <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 text-center md:text-left">
+            <div className="w-full md:w-2/3 flex flex-col gap-3">
               <h1 className="text-xl text-custom-green font-bold">{generalTask.title}</h1>
               <h2 className="text-base">
                 <span className="font-bold">Cliente: </span>
                 {generalTask.client?.name || generalTask.company || 'Sin cliente'}
               </h2>
-              <h2 className="text-base">
+              <h2 className="text-base break-words">
                 <span className="font-bold">Descripción: </span>
                 {generalTask.description}
               </h2>
             </div>
-            <div className="w-auto flex flex-col gap-1 text-left">
+            <div className="w-full md:w-auto flex flex-col items-center md:items-end gap-2 text-center md:text-right">
               <h2 className="text-base">
                 <span className="font-bold">Fecha de entrega</span>
               </h2>
-              <div className="w-35 h-10 flex mb-3 items-center justify-center  border-2 border-black rounded bg-white text-black font-bold">
+              <div className="w-full max-w-[150px] md:w-36 h-10 flex items-center justify-center border-2 border-black rounded bg-white text-black font-bold">
                 {generalTask.estimated_delivery_date?.slice(0, 10) || 'Sin fecha'}
               </div>
-              <h2 className="text-base">
+              <h2 className="text-base mt-2">
                 <span className="font-bold">Estado: </span>
                 {generalTask.generalTaskState?.name || 'Sin estado'}
               </h2>
             </div>
             <div
-              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300"
+              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center text-white font-bold text-sm"
               style={{
-                backgroundColor: trafficLightColor || generalTask.generalTaskState?.color_code || '#A9A9A9',
+                backgroundColor: trafficLightColor || '#A9A9A9',
               }}
-            ></div>
+            >
+              {daysRemaining}
+            </div>
           </div>
         </div>
       </Link>
+
+
 
       {isImageModalOpen && (
        <div
