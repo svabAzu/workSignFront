@@ -10,6 +10,7 @@ import { ProtectedRouter } from '../hooks/ProtectedRouter';
 import { SettingsPages } from '../pages/SettingsPages';
 import {OperatorEditPages} from '../pages/OperatorEditPages';
 import { SpecialtyPages } from '../pages/SpecialtyPages';
+import { DetailTask } from '../pages/DeteilTask';
 
 
 export default function MyRouters() {
@@ -20,7 +21,10 @@ export default function MyRouters() {
       
       <Route element={<ProtectedRouter redirectTo={'/login'} />}>
         <Route path='/' element={<HomePages />} />
+        <Route path='/individualTask/:id' element={<DetailTask />} />
+
         {/* <Route path='/register' element={<RegisterPages />} /> */}
+
         <Route path='/setting' element={<SettingsPages />}>
             <Route path='register' element={<RegisterForm />} />
             <Route path='edit-operario' element={<OperatorEditPages />} />

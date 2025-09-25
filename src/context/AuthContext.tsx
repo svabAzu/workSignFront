@@ -1,42 +1,42 @@
 import {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  type ReactNode,
+    createContext,
+    useState,
+    useContext,
+    useEffect,
+    type ReactNode,
 } from "react";
 import {
-  registerRequest,
-  loginRequest,
-  verifyTokenRequest,
-  logout,
+    registerRequest,
+    loginRequest,
+    verifyTokenRequest,
+    logout,
 } from "../api/auth";
 
 import Cookies from "js-cookie";
 
 interface AuthContextType {
-  user: any;
-  isAutheticaded: boolean;
-  authErrors: any[];
-  loading: boolean;
-  signin: (user: any) => Promise<any>;
-  signup: (user: any) => Promise<boolean>;
-  logoutUser: () => Promise<void>;
-  
+    user: any;
+    isAutheticaded: boolean;
+    authErrors: any[];
+    loading: boolean;
+    signin: (user: any) => Promise<any>;
+    signup: (user: any) => Promise<boolean>;
+    logoutUser: () => Promise<void>;
+
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth deberia estar dentro de un AuthProvider");
-  }
-  return context;
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth deberia estar dentro de un AuthProvider");
+    }
+    return context;
 };
 
 interface AuthProviderProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             console.log(res)
             setIsAutheticaded(true);
             return true;
-          
+
         } catch (error: any) {
             if (Array.isArray(error.response.data)) {
                 setAuthErros(error.response.data);
@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
             try {
                 const res = await verifyTokenRequest();
-               
+
                 if (res.data) {
                     setUser(res.data);
                     setIsAutheticaded(true);
@@ -139,31 +139,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             }
 
         }
-      } catch (error) {
-        console.error(error);
-        setUser(null);
-        setIsAutheticaded(false);
-      } finally {
-        setLoading(false);
-      }
-    }
+        checkLogin();
+    }, []);
 
-    checkLogin();
-  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        signup,
-        signin,
-        user,
-        isAutheticaded,
-        authErrors,
-        loading,
-        logoutUser
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+
+
+    return (
+        <AuthContext.Provider
+            value={{
+                signup,
+                signin,
+                user,
+                isAutheticaded,
+                authErrors,
+                loading,
+                logoutUser
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 };

@@ -1,6 +1,7 @@
+
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
-import { getGeneralTaskRequest } from "../api/Generaltask";
+import { getGeneralTaskRequest, getGeneralTaskIdRequest } from "../api/Generaltask";
 import { getGeneralTaskStateRequest } from "../api/Generaltask";
 import { 
     getSpecialtiesRequest,
@@ -24,6 +25,9 @@ interface GeneralTaskContextType {
     getOperatorUser: () => Promise<void>; 
     operatorUsers: any[];
     updateOperatorUser: (id: number, userData: FormData) => Promise<void>;
+    individualTask: any;
+    setIndividualTask: (task: any) => void;
+    getGeneralTaskById: (id: any) => Promise<void>;
     }
 
 const GeneralTaskContext = createContext<GeneralTaskContextType | null>(null);
@@ -40,6 +44,9 @@ export const useGeneralTask = () => {
 
 export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const [generalTask, setGeneralTask] = useState([]);
+
+    const [individualTask, setIndividualTask] = useState<any>(null);
+    
     const [generalTaskState, setGeneralTaskState] = useState([]);
     const [specialties, setSpecialties] = useState([]); // Estado para almacenar las especialidades  
     const [operatorUsers, setOperatorUsers] = useState([]); // Estado para almacenar los usuarios operadores
@@ -50,6 +57,15 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             setGeneralTask(res.data.data || []);
         } catch (error) {
             setGeneralTask([]);
+        }
+    };
+
+    const getGeneralTaskById = async (id: any) => {
+        try {
+            const res = await getGeneralTaskIdRequest(id);
+            setIndividualTask(res.data.data);
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -131,7 +147,10 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             deleteSpecialty,
             getOperatorUser,
             operatorUsers,
-            updateOperatorUser
+            updateOperatorUser,
+            individualTask,
+            setIndividualTask,
+            getGeneralTaskById
         }}>
             {children}
         </GeneralTaskContext.Provider>

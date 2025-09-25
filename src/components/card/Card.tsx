@@ -1,39 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
-export const getTaskPriority = (
-  creationDateStr?: string,
-  deliveryDateStr?: string
-): number => {
-  if (!creationDateStr || !deliveryDateStr) {
-    return 0; // Prioridad más baja si no hay fechas
-  }
-  const creationDate = new Date(creationDateStr);
-  const deliveryDate = new Date(deliveryDateStr);
-  const now = new Date();
-
-  if (isNaN(creationDate.getTime()) || isNaN(deliveryDate.getTime())) {
-    return 0; // Fechas inválidas
-  }
-
-  // Normalizar 'now' y 'deliveryDate' para comparar solo la fecha (sin la hora)
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const deliveryDay = new Date(deliveryDate.getFullYear(), deliveryDate.getMonth(), deliveryDate.getDate());
-
-  // Si la fecha de entrega es hoy, es de máxima prioridad.
-  if (today.getTime() === deliveryDay.getTime()) {
-    return 3; // Rojo (máxima prioridad porque es hoy)
-  } else if (today > deliveryDay) {
-    return 3; // Rojo si la fecha ya pasó (atrasado)
-  }
-
-  const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
-  const timeRemaining = deliveryDay.getTime() - today.getTime();
-
-  // Si falta 1 semana o menos (y no es hoy o pasado), es amarillo.
-  if (timeRemaining <= ONE_WEEK_IN_MS) return 2; // Amarillo
-  return 1; // Verde (más de una semana)
-};  
+import { getTaskPriority } from "../../utils/taskUtils";
 
 const getDaysRemaining = (deliveryDateStr?: string): number | string => {
   if (!deliveryDateStr) {
@@ -60,7 +27,7 @@ const getTrafficLightColor = (priority: number): string | undefined => {
   return undefined;
 };
 
-const Card = ({ generalTask }: { generalTask: any }) => {
+export const Card = ({ generalTask }: { generalTask: any }) => {
   const [isImageModalOpen, setImageModalOpen] = useState(false);
 
   const trafficLightColor = getTrafficLightColor(
@@ -86,7 +53,7 @@ const Card = ({ generalTask }: { generalTask: any }) => {
   return (
     <>
       <Link
-        to={`/generalTask/${generalTask.ID_general_tasks}`}
+        to={`/individualTask/${generalTask.ID_general_tasks}`}
         className="h-auto flex flex-col md:flex-row justify-start rounded-lg my-4 mx-2 sm:mx-4 p-4 border-solid border-2 shadow-xl gap-4"
         style={{
           borderColor: generalTask.generalTaskState?.color_code || '#ACACAE',
@@ -104,7 +71,7 @@ const Card = ({ generalTask }: { generalTask: any }) => {
         </div>
         <div className="flex flex-col md:flex-row w-full">
           <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 text-center md:text-left">
-            <div className="w-full md:w-2/3 flex flex-col gap-3">
+            <div className=" flex flex-col gap-3">
               <h1 className="text-xl text-custom-green font-bold">{generalTask.title}</h1>
               <h2 className="text-base">
                 <span className="font-bold">Cliente: </span>
