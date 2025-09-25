@@ -69,19 +69,19 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
             className="object-cover w-full h-full"
           />
         </div>
-        <div className="flex flex-col md:flex-row w-full">
-          <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 text-center md:text-left">
-            <div className=" flex flex-col gap-3">
-              <h1 className="text-xl text-custom-green font-bold">{generalTask.title}</h1>
-              <h2 className="text-base">
-                <span className="font-bold">Cliente: </span>
-                {generalTask.client?.name || generalTask.company || 'Sin cliente'}
-              </h2>
-              <h2 className="text-base break-words">
-                <span className="font-bold">Descripción: </span>
-                {generalTask.description}
-              </h2>
-            </div>
+        <div className="flex flex-col lg:flex-row w-full justify-between items-center gap-4">
+          <div className="flex flex-col text-center md:text-left gap-3">
+            <h1 className="text-xl text-custom-green font-bold">{generalTask.title}</h1>
+            <h2 className="text-base">
+              <span className="font-bold">Cliente: </span>
+              {generalTask.client?.name || generalTask.company || 'Sin cliente'}
+            </h2>
+            <h2 className="text-base break-words max-w-md">
+              <span className="font-bold">Descripción: </span>
+              {generalTask.description}
+            </h2>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="w-full md:w-auto flex flex-col items-center md:items-end gap-2 text-center md:text-right">
               <h2 className="text-base">
                 <span className="font-bold">Fecha de entrega</span>
@@ -95,7 +95,7 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
               </h2>
             </div>
             <div
-              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center text-white font-bold text-sm"
+              className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
               style={{
                 backgroundColor: trafficLightColor || '#A9A9A9',
               }}

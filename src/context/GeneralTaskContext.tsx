@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 import { getGeneralTaskRequest, getGeneralTaskIdRequest } from "../api/Generaltask";
 import { getGeneralTaskStateRequest } from "../api/Generaltask";
-import { 
+import {
     getSpecialtiesRequest,
     createSpecialtyRequest,
     updateSpecialtyRequest,
@@ -11,24 +11,30 @@ import {
 } from "../api/Specialties";
 import { getOperatorUserRequest, putOperatorUserRequest } from "../api/OperatorUser";
 
+import { getTaskUssingGeneralTaskIdRequest } from "../api/Task";
+
 
 interface GeneralTaskContextType {
     generalTask: any[];
     getGeneralTask: () => Promise<void>;
-    generalTaskState: any[]; 
+    generalTaskState: any[];
     getGeneralTaskState: () => Promise<void>;
     specialties: any[];
     getSpecialties: () => Promise<void>;
     addSpecialty: (specialty: { name: string }) => Promise<void>;
     updateSpecialty: (id: number, specialty: { name: string }) => Promise<void>;
     deleteSpecialty: (id: number) => Promise<void>;
-    getOperatorUser: () => Promise<void>; 
+    getOperatorUser: () => Promise<void>;
     operatorUsers: any[];
     updateOperatorUser: (id: number, userData: FormData) => Promise<void>;
     individualTask: any;
     setIndividualTask: (task: any) => void;
+
+    getTasksByGeneralTaskId: (id: any) => Promise<void>;
+    
+    TasksByGeneralTaskId: any[];
     getGeneralTaskById: (id: any) => Promise<void>;
-    }
+}
 
 const GeneralTaskContext = createContext<GeneralTaskContextType | null>(null);
 
@@ -46,10 +52,13 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const [generalTask, setGeneralTask] = useState([]);
 
     const [individualTask, setIndividualTask] = useState<any>(null);
-    
+
     const [generalTaskState, setGeneralTaskState] = useState([]);
     const [specialties, setSpecialties] = useState([]); // Estado para almacenar las especialidades  
     const [operatorUsers, setOperatorUsers] = useState([]); // Estado para almacenar los usuarios operadores
+    const [TasksByGeneralTaskId, setTasksByGeneralTaskId] = useState([]); // Estado para almacenar las tareas relacionadas a una tarea general
+
+    //Peticiones de tareas generales y estados
 
     const getGeneralTask = async () => {
         try {
@@ -72,7 +81,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
 
     const getGeneralTaskState = async () => {
         try {
-            const res = await getGeneralTaskStateRequest(); 
+            const res = await getGeneralTaskStateRequest();
             setGeneralTaskState(res.data.data || []);
         } catch (error) {
             setGeneralTaskState([]);
@@ -92,7 +101,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const addSpecialty = async (specialty: { name: string }) => {
         try {
             await createSpecialtyRequest(specialty);
-            await getSpecialties(); // Refresh list
+            await getSpecialties(); 
         } catch (error) {
             console.error("Error al agregar especialidad:", error);
         }
@@ -101,7 +110,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const updateSpecialty = async (id: number, specialty: { name: string }) => {
         try {
             await updateSpecialtyRequest(id, specialty);
-            await getSpecialties(); // Refresh list
+            await getSpecialties(); 
         } catch (error) {
             console.error("Error al actualizar especialidad:", error);
         }
@@ -110,7 +119,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const deleteSpecialty = async (id: number) => {
         try {
             await deleteSpecialtyRequest(id);
-            await getSpecialties(); // Refresh list
+            await getSpecialties(); 
         } catch (error) {
             console.error("Error al eliminar especialidad:", error);
         }
@@ -125,14 +134,30 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
         }
     }
 
-        const updateOperatorUser = async (id: number, userData: FormData) => {
-            try {
-                await putOperatorUserRequest(id, userData);
-            await getOperatorUser(); 
+    const updateOperatorUser = async (id: number, userData: FormData) => {
+        try {
+            await putOperatorUserRequest(id, userData);
+            await getOperatorUser();
         } catch (error) {
             console.error("Error al actualizar usuario operador", error);
         }
-        };
+    };
+
+
+
+    //Peticion para obtener las tareas relacionadas a una tarea general
+    const getTasksByGeneralTaskId = async (id: any) => {
+        try {
+            const res = await getTaskUssingGeneralTaskIdRequest(id);
+            setTasksByGeneralTaskId(res.data.data || []);
+
+        } catch (error) {
+            console.error(error);
+            setTasksByGeneralTaskId([]);
+        }
+    };
+
+
 
     return (
         <GeneralTaskContext.Provider value={{
@@ -150,7 +175,9 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             updateOperatorUser,
             individualTask,
             setIndividualTask,
-            getGeneralTaskById
+            getGeneralTaskById,
+            getTasksByGeneralTaskId,
+            TasksByGeneralTaskId,
         }}>
             {children}
         </GeneralTaskContext.Provider>
