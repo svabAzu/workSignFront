@@ -24,7 +24,7 @@ export const RegisterForm = () => {
   const navigate = useNavigate();
 
   const { getSpecialties, specialties } = useGeneralTask();
-  console.log(specialties);
+  //console.log(specialties);
 
   useEffect(() => {
     getSpecialties();
@@ -306,18 +306,18 @@ export const RegisterForm = () => {
                 >
                   <input
                     type="checkbox"
-                    value={r.id}
-                    checked={values.specialties.includes(r.id)}
+                    value={r.ID_specialty}
+                    checked={values.specialties.includes(r.ID_specialty)}
                     onChange={(e) => {
                       if (e.target.checked) {
                         setFieldValue("specialties", [
                           ...values.specialties,
-                          r.id,
+                          r.ID_specialty,
                         ]);
                       } else {
                         setFieldValue(
                           "specialties",
-                          values.specialties.filter((roleId) => roleId !== r.id)
+                          values.specialties.filter((roleId) => roleId !== r.ID_specialty)
                         );
                       }
                     }}

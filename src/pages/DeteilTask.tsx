@@ -74,7 +74,16 @@ export const DetailTask = () => {
                                         <div>
                                             <dt className="text-lg font-bold uppercase mb-2">Materiales:</dt>
                                             <dd className="text-sm mb-1">
-                                                <div>Esto es para acordarme de hablar con azu con el diseño diciendole que esta parte es para las tareas individuales y no para la general, que deberiamos mover este apartado a otro lado</div>
+                                                {TasksByGeneralTaskId && TasksByGeneralTaskId.flatMap((task) => task.materialsTasks).length > 0 ? (
+                                                    TasksByGeneralTaskId.flatMap((task) => task.materialsTasks).map((material, index) => (
+                                                        <div key={index} className="p-2 border-b last:border-b-0">
+                                                            <p><span className="font-semibold">{material.material.name}:</span> {material.quantity}</p>
+                                                            {material.observations && <p className="text-xs text-gray-600 pl-2">Observaciones: {material.observations}</p>}
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p>No hay materiales asignados.</p>
+                                                )}
                                             </dd>
                                             <hr className="border-t border-green-600 my-1" />
                                         </div>

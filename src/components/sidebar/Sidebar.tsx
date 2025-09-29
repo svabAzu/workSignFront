@@ -21,7 +21,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
       >
         <MdKeyboardArrowRight className="w-full h-full" />
       </button>
-      <section className="flex justify-center items-center pb-6 pt-5 ">
+      <section className="flex justify-center items-center mt-3 mb-3">
         <div className={`inline-flex gap-1 justify-center items-end cursor-pointer transition-all duration-200 transform ${siderbarOpen ? 'scale-[60%]' : 'scale-[75%]'}`}>
           <div>
             <img className="max-h-20 w-auto" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
