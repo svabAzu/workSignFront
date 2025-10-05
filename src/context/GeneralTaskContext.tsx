@@ -9,7 +9,7 @@ import {
     updateSpecialtyRequest,
     deleteSpecialtyRequest
 } from "../api/Specialties";
-import { getOperatorUserRequest, putOperatorUserRequest } from "../api/OperatorUser";
+import { getOperatorUserRequest, putOperatorUserRequest, deleteOperatorUserRequest } from "../api/OperatorUser";
 
 import { getTaskUssingGeneralTaskIdRequest } from "../api/Task";
 
@@ -27,6 +27,7 @@ interface GeneralTaskContextType {
     getOperatorUser: () => Promise<void>;
     operatorUsers: any[];
     updateOperatorUser: (id: number, userData: FormData) => Promise<void>;
+    deleteOperatorUser: (id: number) => Promise<void>;
     individualTask: any;
     setIndividualTask: (task: any) => void;
 
@@ -126,24 +127,33 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     };
 
     const getOperatorUser = async () => {
-        try {
-            const res = await getOperatorUserRequest();
-            setOperatorUsers(res.data.data || []);
-        } catch (error) {
-            setOperatorUsers([]);
-        }
-    }
+  try {
+    const res = await getOperatorUserRequest();
+    console.log("Respuesta del backend:", res.data.data);
+    setOperatorUsers(res.data.data || []);
+  } catch (error) {
+    console.error("Error al cargar operadores", error);
+    setOperatorUsers([]);
+  }
+};
 
-    const updateOperatorUser = async (id: number, userData: FormData) => {
+   const updateOperatorUser = async (id: number, userData: FormData) => {
+  try {
+    await putOperatorUserRequest(id, userData);
+    await getOperatorUser(); // vuelve a cargar la lista
+  } catch (error) {
+    console.error("Error al actualizar usuario operador", error);
+  }
+};
+
+    const deleteOperatorUser = async (id: number) => {
         try {
-            await putOperatorUserRequest(id, userData);
-            await getOperatorUser();
+            await deleteOperatorUserRequest(id);
+            await getOperatorUser(); // Refresh the list
         } catch (error) {
-            console.error("Error al actualizar usuario operador", error);
+            console.error("Error al eliminar usuario operador", error);
         }
     };
-
-
 
     //Peticion para obtener las tareas relacionadas a una tarea general
     const getTasksByGeneralTaskId = async (id: any) => {
@@ -173,6 +183,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             getOperatorUser,
             operatorUsers,
             updateOperatorUser,
+            deleteOperatorUser,
             individualTask,
             setIndividualTask,
             getGeneralTaskById,

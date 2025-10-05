@@ -4,59 +4,53 @@ import { useNavigate } from "react-router-dom";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 import * as Yup from "yup";
 
-interface User {
-  ID_users: number;
-  name: string;
-  last_name: string;
-  password: string;
-  email: string;
-  phone: string;
-  avatar_url?: string;
-  specialties: number[];
-  dni: string;
-  ID_type_user: number;
-}
-
-interface RegisterFormValues {
-  name: string;
-  last_name: string;
-  password: string;
-  email: string;
-  phone: string;
-  avatar_url: File | null;
-  specialties: number[];
-  dni: string;
-  ID_type_user: number;
-}
-
 export const OperatorEditPages = () => {
-  const { operatorUsers, getOperatorUser, updateOperatorUser } =
-    useGeneralTask();
+  const {
+    operatorUsers,
+    getOperatorUser, // trae TODOS los operadores desde /user/operators/all
+    updateOperatorUser,
+    deleteOperatorUser,
+    getSpecialties,
+    specialties,
+  } = useGeneralTask();
+
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { getSpecialties, specialties } = useGeneralTask();
-
+  // Trae especialidades y usuarios al montar
   useEffect(() => {
     getSpecialties();
     getOperatorUser();
   }, []);
 
-  console.log(operatorUsers);
+  const handleDelete = async () => {
+    if (selectedUserId === null) return;
+
+    const confirmed = window.confirm(
+      "¿Estás seguro de que quieres dar de baja a este usuario?"
+    );
+
+    if (confirmed) {
+      try {
+        await deleteOperatorUser(selectedUserId);
+        alert("Usuario dado de baja con éxito");
+        setSelectedUserId(null); // Limpiar selección
+      } catch (error) {
+        console.error(error);
+        alert("Error al dar de baja al usuario");
+      }
+    }
+  };
 
   const schema = Yup.object().shape({
     name: Yup.string().required("El nombre es obligatorio"),
     last_name: Yup.string().required("El apellido es obligatorio"),
     dni: Yup.string().required("El DNI es obligatorio"),
-    email: Yup.string()
-      .email("Email inválido")
-      .required("El correo es obligatorio"),
+    email: Yup.string().email("Email inválido").required("El correo es obligatorio"),
     phone: Yup.string().required("El teléfono es obligatorio"),
     password: Yup.string().min(4, "Mínimo 4 caracteres"),
-    specialties: Yup.array()
-      .of(Yup.number())
-      .min(1, "Selecciona al menos un rol"),
+    specialties: Yup.array().of(Yup.number()).min(1, "Selecciona al menos una especialidad"),
     ID_type_user: Yup.number().required("El tipo de usuario es obligatorio"),
   });
 
@@ -79,7 +73,7 @@ export const OperatorEditPages = () => {
       avatar_url: null,
       specialties: [],
       dni: "",
-      ID_type_user: 2, // Default to Operator
+      ID_type_user: 2, // Operador
     },
     validationSchema: schema,
 
@@ -103,8 +97,7 @@ export const OperatorEditPages = () => {
           formData.append("avatar", formValues.avatar_url);
         }
 
-        //await updateUser(selectedUserId, formData);
-
+        await updateOperatorUser(selectedUserId, formData);
         alert("Usuario actualizado con éxito");
         navigate(0);
       } catch (error) {
@@ -116,9 +109,35 @@ export const OperatorEditPages = () => {
     },
   });
 
-const avatarUrl = operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url
-        ? `${import.meta.env.VITE_API_URL}/${operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url}`
-        : "/iconos/default-avatar.png";
+  // Cuando se selecciona un usuario del select, se llenan los datos del formulario
+  useEffect(() => {
+    if (selectedUserId) {
+      const user = operatorUsers.find((u) => u.ID_users === selectedUserId);
+      if (user) {
+        resetForm({
+          values: {
+            name: user.name || "",
+            last_name: user.last_name || "",
+            dni: user.dni || "",
+            email: user.email || "",
+            phone: user.phone || "",
+            password: "",
+            specialties: user.specialties?.map((s) => s.ID_specialty) || [],
+            ID_type_user: user.ID_type_user || 2,
+            avatar_url: null,
+          },
+        });
+      }
+    }
+  }, [selectedUserId]);
+
+  const avatarUrl =
+    selectedUserId &&
+    operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url
+      ? `${import.meta.env.VITE_API_URL}/${
+          operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url
+        }`
+      : "/iconos/default-avatar.png";
 
   return (
     <form
@@ -150,157 +169,162 @@ const avatarUrl = operatorUsers.find((u) => u.ID_users === selectedUserId)?.avat
       </div>
 
       {/* Campos del formulario */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Columna izquierda */}
-        <div className="flex flex-col gap-4">
-          <div>
-            <label className="block font-bold">Nombre</label>
-            <input
-              name="name"
-              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.name && errors.name && (
-              <p className="text-red-500">{errors.name}</p>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold">Apellido</label>
-            <input
-              name="last_name"
-              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.last_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.last_name && errors.last_name && (
-              <p className="text-red-500">{errors.last_name}</p>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold">DNI</label>
-            <input
-              name="dni"
-              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.dni}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.dni && errors.dni && (
-              <p className="text-red-500">{errors.dni}</p>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold">Correo</label>
-            <input
-              name="email"
-              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.email && errors.email && (
-              <p className="text-red-500">{errors.email}</p>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold">Teléfono</label>
-            <input
-              name="phone"
-              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.phone}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.phone && errors.phone && (
-              <p className="text-red-500">{errors.phone}</p>
-            )}
-          </div>
-          <div>
-            <label className="block font-bold">Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              value={operatorUsers.find((u) => u.ID_users === selectedUserId)?.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="Deja vacío si no quieres cambiarla"
-              className="border border-gray-300 rounded-md p-2 w-full"
-            />
-            {touched.password && errors.password && (
-              <p className="text-red-500">{errors.password}</p>
-            )}
-          </div>
-        </div>
+      {selectedUserId && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Columna izquierda */}
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block font-bold">Nombre</label>
+              <input
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+              {touched.name && errors.name && (
+                <p className="text-red-500">{errors.name}</p>
+              )}
+            </div>
 
-        {/* Columna derecha */}
-        <div className="flex flex-col gap-4">
-          {/* Avatar */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-              {operatorUsers.find((u) => u.ID_users === selectedUserId)?.avatar_url && (
+            <div>
+              <label className="block font-bold">Apellido</label>
+              <input
+                name="last_name"
+                value={values.last_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+              {touched.last_name && errors.last_name && (
+                <p className="text-red-500">{errors.last_name}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-bold">DNI</label>
+              <input
+                name="dni"
+                value={values.dni}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+              {touched.dni && errors.dni && (
+                <p className="text-red-500">{errors.dni}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-bold">Correo</label>
+              <input
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+              {touched.email && errors.email && (
+                <p className="text-red-500">{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-bold">Teléfono</label>
+              <input
+                name="phone"
+                value={values.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+              {touched.phone && errors.phone && (
+                <p className="text-red-500">{errors.phone}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-bold">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Deja vacío si no quieres cambiarla"
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+              {touched.password && errors.password && (
+                <p className="text-red-500">{errors.password}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Columna derecha */}
+          <div className="flex flex-col gap-4">
+            {/* Avatar */}
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                 <img
                   src={avatarUrl}
                   alt="preview"
                   className="object-cover w-full h-full"
                 />
+              </div>
+              <input
+                type="file"
+                id="avatar_url"
+                name="avatar_url"
+                accept="image/*"
+                onChange={(e) =>
+                  setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
+                }
+                onBlur={handleBlur}
+                className="text-sm"
+              />
+            </div>
+
+            {/* Especialidades */}
+            <div>
+              <label className="block font-bold mb-2">
+                Especialidades (selecciona uno o más)
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {specialties.map((r) => (
+                  <label
+                    key={r.ID_specialty}
+                    className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      value={r.ID_specialty}
+                      checked={values.specialties.includes(r.ID_specialty)}
+                      onChange={(e) => {
+                        const specialtyId = Number(e.target.value);
+                        if (e.target.checked) {
+                          setFieldValue("specialties", [
+                            ...values.specialties,
+                            specialtyId,
+                          ]);
+                        } else {
+                          setFieldValue(
+                            "specialties",
+                            values.specialties.filter((id) => id !== specialtyId)
+                          );
+                        }
+                      }}
+                    />
+                    {r.name}
+                  </label>
+                ))}
+              </div>
+              {touched.specialties && errors.specialties && (
+                <p className="text-red-500">{errors.specialties}</p>
               )}
             </div>
-            <input
-              type="file"
-              id="avatar_url"
-              name="avatar_url"
-              accept="image/*"
-              onChange={(e) =>
-                setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
-              }
-              onBlur={handleBlur}
-              className="text-sm"
-            />
-          </div>
-
-          {/* Roles */}
-          <div>
-            <label className="block font-bold mb-2">
-              Especialidades (selecciona uno o más)
-            </label>
-            <div className="grid grid-cols-2 gap-2 ">
-              {specialties.map((r) => (
-                <label
-                  key={r.ID_specialty}
-                  className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    value={r.ID_specialty}
-                    checked={values.specialties.includes(r.ID_specialty)}
-                    onChange={(e) => {
-                      const specialtyId = Number(e.target.value);
-                      if (e.target.checked) {
-                        setFieldValue("specialties", [
-                          ...values.specialties,
-                          specialtyId,
-                        ]);
-                      } else {
-                        setFieldValue(
-                          "specialties",
-                          values.specialties.filter((id) => id !== specialtyId)
-                        );
-                      }
-                    }}
-                  />
-                  {r.name}
-                </label>
-              ))}
-            </div>
-            {touched.specialties && errors.specialties && (
-              <p className="text-red-500">{errors.specialties}</p>
-            )}
           </div>
         </div>
-      </div>
+      )}
 
       {/* Botones */}
       <div className="flex justify-between mt-6">
@@ -313,7 +337,7 @@ const avatarUrl = operatorUsers.find((u) => u.ID_users === selectedUserId)?.avat
         </button>
         <button
           type="button"
-          //onClick={handleDelete}
+          onClick={handleDelete}
           disabled={selectedUserId === null}
           className="bg-red-600 text-white py-2 px-6 rounded-full hover:bg-red-700"
         >
