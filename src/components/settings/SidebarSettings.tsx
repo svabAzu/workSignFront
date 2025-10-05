@@ -14,7 +14,7 @@ export const SidebarSettings = () => {
     return (
 
         <main className="w-full">
-  {}
+ 
   <section className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
     <h1 className="text-2xl sm:text-3xl font-bold text-[#199431] text-center sm:text-left">
       C O N F I G U R A C I Ó N

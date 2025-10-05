@@ -1,34 +1,45 @@
 import { Routes, Route } from 'react-router-dom';
 import { LoginPages } from "../pages/LoginPages";
 
-import { 
+import {
   //RegisterPages, 
-  RegisterForm } from "../pages/RegisterPages";
+  RegisterForm
+} from "../pages/RegisterPages";
 
 import { HomePages } from '../pages/HomePages';
 import { ProtectedRouter } from '../hooks/ProtectedRouter';
 import { SettingsPages } from '../pages/SettingsPages';
-import {OperatorEditPages} from '../pages/OperatorEditPages';
+import { OperatorEditPages } from '../pages/OperatorEditPages';
 import { SpecialtyPages } from '../pages/SpecialtyPages';
 import { DetailTask } from '../pages/DeteilTask';
-
+import { CreateGeneralTask } from '../pages/CreateGeneralTask';
+import { FormNewJob, FormMaterials, FormEditJob} from '../components/newJob/FormNewJob';
 
 export default function MyRouters() {
   return (
     <Routes>
 
       <Route path='/login' element={<LoginPages />} />
-      
+
       <Route element={<ProtectedRouter redirectTo={'/login'} />}>
         <Route path='/' element={<HomePages />} />
         <Route path='/individualTask/:id' element={<DetailTask />} />
 
+
+
+        <Route path='/newJob' element={<CreateGeneralTask />} >
+          <Route path='' element={<FormNewJob/>} />
+          <Route path='materials' element={<FormMaterials/>} />
+          <Route path='editJob' element={<FormEditJob/>} />
+
+        </Route>
+
         {/* <Route path='/register' element={<RegisterPages />} /> */}
 
         <Route path='/setting' element={<SettingsPages />}>
-            <Route path='register' element={<RegisterForm />} />
-            <Route path='edit-operario' element={<OperatorEditPages />} />
-            <Route path='specialty' element={<SpecialtyPages />} />
+          <Route path='register' element={<RegisterForm />} />
+          <Route path='edit-operario' element={<OperatorEditPages />} />
+          <Route path='specialty' element={<SpecialtyPages />} />
         </Route>
 
       </Route>
