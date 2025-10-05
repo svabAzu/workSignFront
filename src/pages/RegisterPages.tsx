@@ -17,14 +17,16 @@ interface RegisterFormValues {
   ID_type_user: number;
 }
 
+// 🔹 Componente reutilizable para mostrar errores
+const ErrorText = ({ touched, error }: { touched?: boolean; error?: string }) =>
+  touched && error ? <div className="text-red-500 text-xs mt-1">{error}</div> : null;
+
 export const RegisterForm = () => {
   const { signup, authErrors } = useAuth();
-
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
 
   const { getSpecialties, specialties } = useGeneralTask();
-  //console.log(specialties);
 
   useEffect(() => {
     getSpecialties();
@@ -44,7 +46,7 @@ export const RegisterForm = () => {
       .email("Email inválido")
       .required("El correo es obligatorio"),
     phone: Yup.string()
-      .required("El teléfono es obligatorio")
+      .matches(/^\d+$/, 'Este campo debe contener solo números.')
       .matches(/^\d{8,15}$/, "El teléfono debe tener entre 8 y 15 dígitos"),
     password: Yup.string()
       .required("La contraseña es obligatoria")
@@ -76,7 +78,7 @@ export const RegisterForm = () => {
   const {
     handleSubmit,
     handleChange,
-    handleBlur, 
+    handleBlur,
     setFieldValue,
     resetForm,
     values,
@@ -97,7 +99,6 @@ export const RegisterForm = () => {
     validationSchema: schema,
     onSubmit: async (values) => {
       console.log(values);
-
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("last_name", values.last_name);
@@ -167,9 +168,7 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
             />
-            {touched.name && errors.name && (
-              <div className="text-red-500 text-xs mt-1">{errors.name}</div>
-            )}
+            {touched.name && errors.name && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
           </div>
 
           {/* Apellido */}
@@ -184,11 +183,7 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
             />
-            {touched.last_name && errors.last_name && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.last_name}
-              </div>
-            )}
+            {touched.last_name && errors.last_name && <div className="text-red-500 text-xs mt-1">{errors.last_name}</div>}
           </div>
 
           {/* DNI */}
@@ -203,15 +198,13 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
             />
-            {touched.dni && errors.dni && (
-              <div className="text-red-500 text-xs mt-1">{errors.dni}</div>
-            )}
+            {touched.dni && errors.dni && <div className="text-red-500 text-xs mt-1">{errors.dni}</div>}
           </div>
 
           {/* Email */}
           <div>
             <label className="block font-bold text-black text-sm sm:text-base">
-              Correo
+              Correo <span className="text-red-500">*</span>
             </label>
             <input
               name="email"
@@ -220,12 +213,13 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
             />
+            {touched.email && errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
           </div>
 
           {/* Teléfono */}
           <div>
             <label className="block font-bold text-black  text-sm sm:text-base">
-              Teléfono
+              teléfono
             </label>
             <input
               name="phone"
@@ -234,6 +228,7 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
             />
+            {touched.phone && errors.phone && <div className="text-red-500 text-xs mt-1">{errors.phone}</div>}
           </div>
 
           {/* Password */}
@@ -249,6 +244,7 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="border border-gray-300 rounded-md p-2 w-full text-sm sm:text-base"
             />
+            {touched.password && errors.password && <div className="text-red-500 text-xs mt-1">{errors.password}</div>}
           </div>
         </div>
 
@@ -276,6 +272,7 @@ export const RegisterForm = () => {
               onBlur={handleBlur}
               className="text-sm"
             />
+            {touched.avatar_url && errors.avatar_url && <div className="text-red-500 text-xs mt-1">{errors.avatar_url as string}</div>}
           </div>
 
           {/* Usuario */}
@@ -291,6 +288,7 @@ export const RegisterForm = () => {
               <option value={1}>Administrador</option>
               <option value={2}>Operador</option>
             </select>
+            {touched.ID_type_user && errors.ID_type_user && <div className="text-red-500 text-xs mt-1">{errors.ID_type_user}</div>}
           </div>
 
           {/* Roles */}
@@ -306,6 +304,7 @@ export const RegisterForm = () => {
                 >
                   <input
                     type="checkbox"
+                    name="specialties"
                     value={r.ID_specialty}
                     checked={values.specialties.includes(r.ID_specialty)}
                     onChange={(e) => {
@@ -328,6 +327,7 @@ export const RegisterForm = () => {
                 </label>
               ))}
             </div>
+            {touched.specialties && errors.specialties && <div className="text-red-500 text-xs mt-1">{errors.specialties as string}</div>}
           </div>
         </div>
       </div>
