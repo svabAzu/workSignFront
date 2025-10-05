@@ -1,4 +1,4 @@
-import { MdKeyboardArrowRight, MdHome, MdPersonAdd, MdLogout, MdOutlineSettings } from "react-icons/md";
+import { MdKeyboardArrowRight, MdHome, MdLogout, MdOutlineSettings,MdAdd  } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -105,11 +105,11 @@ const linksArray = [
     icon: <MdHome className="size-6 " />,
     To: "/"
   },
-  // {
-  //   label: "Register",
-  //   icon: <MdPersonAdd className="size-6 text-black" />,
-  //   To: "/register"
-  // }
+  {
+    label: "Crear trabajo",
+    icon: <MdAdd  className="size-6 text-black" />,
+    To: "/newJob"
+  }
 ];
 
 const secondaryLinksArray = [
