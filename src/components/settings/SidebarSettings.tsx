@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 
 
@@ -52,10 +52,6 @@ export const SidebarSettings = () => {
     </Link>
   </nav>
 
-  {/* Content */}
-  <section className="p-4 mt-4 w-full">
-    <Outlet />
-  </section>
 </main>
 
 

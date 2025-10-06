@@ -47,10 +47,14 @@ export const OperatorEditPages = () => {
     name: Yup.string().required("El nombre es obligatorio"),
     last_name: Yup.string().required("El apellido es obligatorio"),
     dni: Yup.string().required("El DNI es obligatorio"),
-    email: Yup.string().email("Email inválido").required("El correo es obligatorio"),
+    email: Yup.string()
+      .email("Email inválido")
+      .required("El correo es obligatorio"),
     phone: Yup.string().required("El teléfono es obligatorio"),
     password: Yup.string().min(4, "Mínimo 4 caracteres"),
-    specialties: Yup.array().of(Yup.number()).min(1, "Selecciona al menos una especialidad"),
+    specialties: Yup.array()
+      .of(Yup.number())
+      .min(1, "Selecciona al menos una especialidad"),
     ID_type_user: Yup.number().required("El tipo de usuario es obligatorio"),
   });
 
@@ -80,6 +84,7 @@ export const OperatorEditPages = () => {
     onSubmit: async (formValues) => {
       if (selectedUserId === null) return;
       setLoading(true);
+      console.log(formValues);
 
       try {
         const formData = new FormData();
@@ -98,11 +103,11 @@ export const OperatorEditPages = () => {
         }
 
         await updateOperatorUser(selectedUserId, formData);
-        alert("Usuario actualizado con éxito");
-        navigate(0);
+        //alert("Usuario actualizado con éxito");
+        //navigate(0);
       } catch (error) {
         console.error(error);
-        alert("Error al actualizar el usuario");
+        //alert("Error al actualizar el usuario");
       } finally {
         setLoading(false);
       }
@@ -264,26 +269,62 @@ export const OperatorEditPages = () => {
           <div className="flex flex-col gap-4">
             {/* Avatar */}
             <div className="flex flex-col sm:flex-row items-center gap-4">
+              {/* Vista previa circular */}
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                <img
-                  src={avatarUrl}
-                  alt="preview"
-                  className="object-cover w-full h-full"
-                />
+                {values.avatar_url ? (
+                  <img
+                    src={URL.createObjectURL(values.avatar_url)}
+                    alt="preview"
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <img
+                    src={avatarUrl}
+                    alt="avatar actual"
+                    className="object-cover w-full h-full"
+                  />
+                )}
               </div>
-              <input
-                type="file"
-                id="avatar_url"
-                name="avatar_url"
-                accept="image/*"
-                onChange={(e) =>
-                  setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
-                }
-                onBlur={handleBlur}
-                className="text-sm"
-              />
-            </div>
 
+              {/* Contenedor del botón y texto */}
+              <div className="flex flex-col items-start">
+                <label
+                  htmlFor="avatar_url"
+                  className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-green-700 transition-colors text-sm"
+                >
+                  {values.avatar_url ? "Cambiar imagen" : "Seleccionar nueva imagen"}
+                </label>
+
+                <input
+                  type="file"
+                  id="avatar_url"
+                  name="avatar_url"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setFieldValue(
+                      "avatar_url",
+                      e.currentTarget.files?.[0] || null
+                    )
+                  }
+                  onBlur={handleBlur}
+                  className="hidden"
+                />
+
+                {/* Nombre del archivo si hay uno nuevo */}
+                {values.avatar_url && (
+                  <span className="text-gray-600 text-xs mt-1 truncate max-w-[200px]">
+                    {values.avatar_url.name} seleccionada
+                  </span>
+                )}
+
+                {/* Mostrar error si hay */}
+                {touched.avatar_url && errors.avatar_url && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.avatar_url as string}
+                  </div>
+                )}
+              </div>
+            </div>
             {/* Especialidades */}
             <div>
               <label className="block font-bold mb-2">
@@ -309,7 +350,9 @@ export const OperatorEditPages = () => {
                         } else {
                           setFieldValue(
                             "specialties",
-                            values.specialties.filter((id) => id !== specialtyId)
+                            values.specialties.filter(
+                              (id) => id !== specialtyId
+                            )
                           );
                         }
                       }}

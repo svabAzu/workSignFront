@@ -14,7 +14,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
 
 
   return (
-    <main className='bg-[#F1F1F1] text-white sticky top-0 h-[100dvh] pt-8'>
+    <main className='bg-[#F1F1F1] text-white sticky top-0 h-[100dvh] pt-8 flex flex-col'>
       <button
         className={`absolute top-24 -right-7 w-8 h-8 rounded-[50%] shadow-[0_0_7px_white] bg-green-600 cursor-pointer border-none transition-all duration-[0.5s] outline-none ${siderbarOpen ? 'rotate-0' : 'rotate-180'}`}
         onClick={() => setSidebarOpen(!siderbarOpen)}
@@ -33,7 +33,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
       </section>
 
 
-      <section className="flex flex-col gap-6 items-center w-full h-60">
+      <section className="flex flex-col gap-6 items-center w-full">
         {linksArray.map(({ icon, label, To }) => (
           <div className={`flex justify-center items-center  ${siderbarOpen ? 'w-full' : 'w-[80%]'}`} key={label}>
             <div
@@ -62,7 +62,7 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
       <span className="h-0.5 w-full bg-white flex my-6 " />
 
 
-      <section className="flex flex-col justify-start items-center gap-3 w-full">
+      <section className="flex flex-col justify-start items-center gap-3 w-full mt-auto mb-4">
         {secondaryLinksArray.map(({ icon, label, To }) => (
           <div className={`flex justify-center items-center  ${siderbarOpen ? 'w-full' : 'w-[80%]'}`} key={label}>
             <div
@@ -84,14 +84,20 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
             </div>
           </div>
         ))}
-        <button onClick={handleClick} className="flex items-center decoration-none py-1.5 w-full justify-center border-none bg-transparent cursor-pointer">
-          <div className="px-2 py-4 flex ">
-            {<MdLogout className="size-6 text-black" />}
+        <div className={`flex justify-center items-center ${siderbarOpen ? 'w-full' : 'w-[80%]'}`}>
+          <div
+            className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8 max-w-[70%] w-full rounded-2xl border-2 border-[#ACACAE] bg-[#ACACAE] text-black hover:border-[#199431]`}
+          >
+            <button onClick={handleClick} className="flex items-center decoration-none py-1.5 w-full justify-center">
+              <div className="px-2 py-2 flex">
+                <MdLogout className="size-6" />
           </div>
           {!siderbarOpen && (
-            <span className="text-black">Salir</span>
+                <span>Salir</span>
           )}
         </button>
+          </div>
+        </div>
       </section>
 
 
