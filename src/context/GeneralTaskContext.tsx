@@ -129,7 +129,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const getOperatorUser = async () => {
   try {
     const res = await getOperatorUserRequest();
-    console.log("Respuesta del backend:", res.data.data);
+    //console.log("Respuesta del backend:", res.data.data);
     setOperatorUsers(res.data.data || []);
   } catch (error) {
     console.error("Error al cargar operadores", error);

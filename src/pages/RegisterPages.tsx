@@ -4,18 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 import * as Yup from "yup";
-
-interface RegisterFormValues {
-  name: string;
-  last_name: string;
-  password: string;
-  email: string;
-  phone: string;
-  avatar_url: File | null;
-  specialties: number[];
-  dni: string;
-  ID_type_user: number;
-}
+import type { RegisterFormValues } from "../types";
 
 // 🔹 Componente reutilizable para mostrar errores
 const ErrorText = ({ touched, error }: { touched?: boolean; error?: string }) =>
