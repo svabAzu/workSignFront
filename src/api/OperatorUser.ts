@@ -10,6 +10,6 @@ export const putOperatorUserRequest = async (
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
-export const deleteOperatorUserRequest = async (id: number) => {
-  return await axios.delete(`/user/${id}`);
+export const updateOperatorUserStateRequest = async (id: number, state: boolean) => {
+  return await axios.put(`/user/state/${id}`, { state });
 };

@@ -10,7 +10,7 @@ export const OperatorEditPages = () => {
     operatorUsers,
     getOperatorUser,
     updateOperatorUser,
-    deleteOperatorUser,
+    updateOperatorUserState,
     getSpecialties,
     specialties,
   } = useGeneralTask();
@@ -31,7 +31,7 @@ export const OperatorEditPages = () => {
     getOperatorUser();
   }, []);
 
-  const handleDelete = async () => {
+  const handleDeactivate = async () => {
     if (selectedUserId === null) return;
 
     const confirmed = window.confirm(
@@ -40,7 +40,7 @@ export const OperatorEditPages = () => {
 
     if (confirmed) {
       try {
-        await deleteOperatorUser(selectedUserId);
+        await updateOperatorUserState(selectedUserId, false); // false = desactivado
         setModalInfo({
           show: true,
           title: "¡Éxito!",
@@ -119,6 +119,7 @@ export const OperatorEditPages = () => {
           message: "Usuario actualizado con éxito.",
           type: 'success',
         });
+        navigate(0)
       } catch (error) {
         console.error(error);
         setModalInfo({
@@ -366,7 +367,7 @@ export const OperatorEditPages = () => {
           </button>
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={handleDeactivate}
             disabled={selectedUserId === null}
             className="bg-red-600 text-white py-2 px-6 rounded-full hover:bg-red-700 disabled:bg-gray-400"
           >
