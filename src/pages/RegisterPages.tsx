@@ -239,30 +239,58 @@ export const RegisterForm = () => {
 
         {/* Columna derecha */}
         <div className="flex flex-col gap-4">
-          {/* Imagen */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-              {values.avatar_url && (
-                <img
-                  src={URL.createObjectURL(values.avatar_url)}
-                  alt="preview"
-                  className="object-cover w-full h-full"
-                />
-              )}
-            </div>
-            <input
-              type="file"
-              id="avatar_url"
-              name="avatar_url"
-              accept="image/*"
-              onChange={(e) =>
-                setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
-              }
-              onBlur={handleBlur}
-              className="text-sm"
-            />
-            {touched.avatar_url && errors.avatar_url && <div className="text-red-500 text-xs mt-1">{errors.avatar_url as string}</div>}
-          </div>
+        {/* Imagen */}
+<div className="flex flex-col sm:flex-row items-center gap-4">
+  {/* Vista previa circular */}
+  <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+    {values.avatar_url ? (
+      <img
+        src={URL.createObjectURL(values.avatar_url)}
+        alt="preview"
+        className="object-cover w-full h-full"
+      />
+    ) : (
+      <span className="text-gray-500 text-xs text-center">Sin imagen</span>
+    )}
+  </div>
+
+  {/* Botón para seleccionar archivo */}
+  <div className="flex flex-col items-start">
+    <label
+      htmlFor="avatar_url"
+      className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-green-700 transition-colors text-sm"
+    >
+      Seleccionar imagen
+    </label>
+
+    <input
+      type="file"
+      id="avatar_url"
+      name="avatar_url"
+      accept="image/*"
+      onChange={(e) =>
+        setFieldValue("avatar_url", e.currentTarget.files?.[0] || null)
+      }
+      onBlur={handleBlur}
+      className="hidden"
+    />
+
+    {/* Mostrar nombre del archivo si existe */}
+    {values.avatar_url && (
+      <span className="text-gray-600 text-xs mt-1 truncate max-w-[200px]">
+        {values.avatar_url.name} seleccionada
+      </span>
+    )}
+
+    {/* Mostrar error si hay */}
+    {touched.avatar_url && errors.avatar_url && (
+      <div className="text-red-500 text-xs mt-1">
+        {errors.avatar_url as string}
+      </div>
+    )}
+  </div>
+</div>
+
 
           {/* Usuario */}
           <div>

@@ -63,10 +63,14 @@ export const OperatorEditPages = () => {
     name: Yup.string().required("El nombre es obligatorio"),
     last_name: Yup.string().required("El apellido es obligatorio"),
     dni: Yup.string().required("El DNI es obligatorio"),
-    email: Yup.string().email("Email inválido").required("El correo es obligatorio"),
+    email: Yup.string()
+      .email("Email inválido")
+      .required("El correo es obligatorio"),
     phone: Yup.string().required("El teléfono es obligatorio"),
     password: Yup.string().min(4, "Mínimo 4 caracteres"),
-    specialties: Yup.array().of(Yup.number()).min(1, "Selecciona al menos una especialidad"),
+    specialties: Yup.array()
+      .of(Yup.number())
+      .min(1, "Selecciona al menos una especialidad"),
     ID_type_user: Yup.number().required("El tipo de usuario es obligatorio"),
   });
 
@@ -96,6 +100,7 @@ export const OperatorEditPages = () => {
     onSubmit: async (formValues) => {
       if (selectedUserId === null) return;
       setLoading(true);
+      console.log(formValues);
 
       try {
         const formData = new FormData();
@@ -113,6 +118,7 @@ export const OperatorEditPages = () => {
         }
 
         await updateOperatorUser(selectedUserId, formData);
+
         setModalInfo({
           show: true,
           title: "¡Éxito!",
@@ -128,6 +134,7 @@ export const OperatorEditPages = () => {
           message: "Error al actualizar el usuario.",
           type: 'error',
         });
+
       } finally {
         setLoading(false);
       }
@@ -314,6 +321,20 @@ export const OperatorEditPages = () => {
                   onBlur={handleBlur}
                   className="text-sm"
                 />
+
+                {/* Nombre del archivo si hay uno nuevo */}
+                {values.avatar_url && (
+                  <span className="text-gray-600 text-xs mt-1 truncate max-w-[200px]">
+                    {values.avatar_url.name} seleccionada
+                  </span>
+                )}
+
+                {/* Mostrar error si hay */}
+                {touched.avatar_url && errors.avatar_url && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.avatar_url as string}
+                  </div>
+                )}
               </div>
 
               <div>
