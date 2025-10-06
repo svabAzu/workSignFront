@@ -3,28 +3,35 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 import * as Yup from "yup";
+import type { RegisterFormValues } from "../types";
 
 export const OperatorEditPages = () => {
   const {
     operatorUsers,
-    getOperatorUser, // trae TODOS los operadores desde /user/operators/all
+    getOperatorUser,
     updateOperatorUser,
-    deleteOperatorUser,
+    updateOperatorUserState,
     getSpecialties,
     specialties,
   } = useGeneralTask();
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [modalInfo, setModalInfo] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
   const navigate = useNavigate();
 
-  // Trae especialidades y usuarios al montar
   useEffect(() => {
     getSpecialties();
     getOperatorUser();
   }, []);
 
-  const handleDelete = async () => {
+  const handleDeactivate = async () => {
     if (selectedUserId === null) return;
 
     const confirmed = window.confirm(
@@ -33,12 +40,21 @@ export const OperatorEditPages = () => {
 
     if (confirmed) {
       try {
-        await deleteOperatorUser(selectedUserId);
-        alert("Usuario dado de baja con éxito");
-        setSelectedUserId(null); // Limpiar selección
+        await updateOperatorUserState(selectedUserId, false); // false = desactivado
+        setModalInfo({
+          show: true,
+          title: "¡Éxito!",
+          message: "Usuario dado de baja con éxito.",
+          type: 'success',
+        });
       } catch (error) {
         console.error(error);
-        alert("Error al dar de baja al usuario");
+        setModalInfo({
+          show: true,
+          title: "Error",
+          message: "Error al dar de baja al usuario.",
+          type: 'error',
+        });
       }
     }
   };
@@ -77,7 +93,7 @@ export const OperatorEditPages = () => {
       avatar_url: null,
       specialties: [],
       dni: "",
-      ID_type_user: 2, // Operador
+      ID_type_user: 2,
     },
     validationSchema: schema,
 
@@ -90,8 +106,7 @@ export const OperatorEditPages = () => {
         const formData = new FormData();
         formData.append("name", formValues.name);
         formData.append("last_name", formValues.last_name);
-        if (formValues.password)
-          formData.append("password", formValues.password);
+        if (formValues.password) formData.append("password", formValues.password);
         formData.append("email", formValues.email);
         formData.append("phone", formValues.phone);
         formData.append("dni", formValues.dni);
@@ -99,23 +114,35 @@ export const OperatorEditPages = () => {
         formData.append("specialties", JSON.stringify(formValues.specialties));
 
         if (formValues.avatar_url) {
-          formData.append("avatar", formValues.avatar_url);
+          formData.append("avatar_url", formValues.avatar_url);
         }
 
         await updateOperatorUser(selectedUserId, formData);
-        //alert("Usuario actualizado con éxito");
-        //navigate(0);
+
+        setModalInfo({
+          show: true,
+          title: "¡Éxito!",
+          message: "Usuario actualizado con éxito.",
+          type: 'success',
+        });
+        navigate(0)
       } catch (error) {
         console.error(error);
-        //alert("Error al actualizar el usuario");
+        setModalInfo({
+          show: true,
+          title: "Error",
+          message: "Error al actualizar el usuario.",
+          type: 'error',
+        });
+
       } finally {
         setLoading(false);
       }
     },
   });
 
-  // Cuando se selecciona un usuario del select, se llenan los datos del formulario
   useEffect(() => {
+    setAvatarPreview(null);
     if (selectedUserId) {
       const user = operatorUsers.find((u) => u.ID_users === selectedUserId);
       if (user) {
@@ -127,7 +154,7 @@ export const OperatorEditPages = () => {
             email: user.email || "",
             phone: user.phone || "",
             password: "",
-            specialties: user.specialties?.map((s) => s.ID_specialty) || [],
+            specialties: user.specialties?.map((s: any) => s.ID_specialty) || [],
             ID_type_user: user.ID_type_user || 2,
             avatar_url: null,
           },
@@ -145,169 +172,154 @@ export const OperatorEditPages = () => {
       : "/iconos/default-avatar.png";
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-xl max-w-5xl mx-auto w-full"
-    >
-      <h1 className="text-green-600 font-bold text-2xl mb-6 uppercase tracking-wide">
-        Editar Usuario
-      </h1>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-xl max-w-5xl mx-auto w-full"
+      >
+        <h1 className="text-green-600 font-bold text-2xl mb-6 uppercase tracking-wide">
+          Editar Usuario
+        </h1>
 
-      {/* Selección de usuario */}
-      <div className="mb-6">
-        <label className="block font-bold mb-2">Seleccionar Usuario</label>
-        <select
-          value={selectedUserId ?? ""}
-          onChange={(e) =>
-            setSelectedUserId(e.target.value ? Number(e.target.value) : null)
-          }
-          className="border border-gray-300 rounded-md p-2 w-full"
-        >
-          <option value="">-- Selecciona un usuario --</option>
-          {Array.isArray(operatorUsers) &&
-            operatorUsers.map((u) => (
-              <option key={u.ID_users} value={u.ID_users}>
-                {u.name} {u.last_name}
-              </option>
-            ))}
-        </select>
-      </div>
+        <div className="mb-6">
+          <label className="block font-bold mb-2">Seleccionar Usuario</label>
+          <select
+            value={selectedUserId ?? ""}
+            onChange={(e) =>
+              setSelectedUserId(e.target.value ? Number(e.target.value) : null)
+            }
+            className="border border-gray-300 rounded-md p-2 w-full"
+          >
+            <option value="">-- Selecciona un usuario --</option>
+            {Array.isArray(operatorUsers) &&
+              operatorUsers.map((u) => (
+                <option key={u.ID_users} value={u.ID_users}>
+                  {u.name} {u.last_name}
+                </option>
+              ))}
+          </select>
+        </div>
 
-      {/* Campos del formulario */}
-      {selectedUserId && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Columna izquierda */}
-          <div className="flex flex-col gap-4">
-            <div>
-              <label className="block font-bold">Nombre</label>
-              <input
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-              {touched.name && errors.name && (
-                <p className="text-red-500">{errors.name}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-bold">Apellido</label>
-              <input
-                name="last_name"
-                value={values.last_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-              {touched.last_name && errors.last_name && (
-                <p className="text-red-500">{errors.last_name}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-bold">DNI</label>
-              <input
-                name="dni"
-                value={values.dni}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-              {touched.dni && errors.dni && (
-                <p className="text-red-500">{errors.dni}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-bold">Correo</label>
-              <input
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-              {touched.email && errors.email && (
-                <p className="text-red-500">{errors.email}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-bold">Teléfono</label>
-              <input
-                name="phone"
-                value={values.phone}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-              {touched.phone && errors.phone && (
-                <p className="text-red-500">{errors.phone}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-bold">Contraseña</label>
-              <input
-                type="password"
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                placeholder="Deja vacío si no quieres cambiarla"
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-              {touched.password && errors.password && (
-                <p className="text-red-500">{errors.password}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Columna derecha */}
-          <div className="flex flex-col gap-4">
-            {/* Avatar */}
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              {/* Vista previa circular */}
-              <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                {values.avatar_url ? (
-                  <img
-                    src={URL.createObjectURL(values.avatar_url)}
-                    alt="preview"
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <img
-                    src={avatarUrl}
-                    alt="avatar actual"
-                    className="object-cover w-full h-full"
-                  />
+        {selectedUserId && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="block font-bold">Nombre</label>
+                <input
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                {touched.name && errors.name && (
+                  <p className="text-red-500">{errors.name}</p>
                 )}
               </div>
 
-              {/* Contenedor del botón y texto */}
-              <div className="flex flex-col items-start">
-                <label
-                  htmlFor="avatar_url"
-                  className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-green-700 transition-colors text-sm"
-                >
-                  {values.avatar_url ? "Cambiar imagen" : "Seleccionar nueva imagen"}
-                </label>
+              <div>
+                <label className="block font-bold">Apellido</label>
+                <input
+                  name="last_name"
+                  value={values.last_name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                {touched.last_name && errors.last_name && (
+                  <p className="text-red-500">{errors.last_name}</p>
+                )}
+              </div>
 
+              <div>
+                <label className="block font-bold">DNI</label>
+                <input
+                  name="dni"
+                  value={values.dni}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                {touched.dni && errors.dni && (
+                  <p className="text-red-500">{errors.dni}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-bold">Correo</label>
+                <input
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                {touched.email && errors.email && (
+                  <p className="text-red-500">{errors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-bold">Teléfono</label>
+                <input
+                  name="phone"
+                  value={values.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                {touched.phone && errors.phone && (
+                  <p className="text-red-500">{errors.phone}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-bold">Contraseña</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Deja vacío si no quieres cambiarla"
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                {touched.password && errors.password && (
+                  <p className="text-red-500">{errors.password}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                  <img
+                    src={avatarPreview || avatarUrl}
+                    alt="preview"
+                    className="object-cover w-full h-full"
+                  />
+                </div>
                 <input
                   type="file"
                   id="avatar_url"
                   name="avatar_url"
                   accept="image/*"
-                  onChange={(e) =>
-                    setFieldValue(
-                      "avatar_url",
-                      e.currentTarget.files?.[0] || null
-                    )
-                  }
+                  onChange={(e) => {
+                    const file = e.currentTarget.files?.[0];
+                    if (file) {
+                      setFieldValue("avatar_url", file);
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setAvatarPreview(reader.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                    } else {
+                      setFieldValue("avatar_url", null);
+                      setAvatarPreview(null);
+                    }
+                  }}
                   onBlur={handleBlur}
-                  className="hidden"
+                  className="text-sm"
                 />
 
                 {/* Nombre del archivo si hay uno nuevo */}
@@ -324,69 +336,93 @@ export const OperatorEditPages = () => {
                   </div>
                 )}
               </div>
-            </div>
-            {/* Especialidades */}
-            <div>
-              <label className="block font-bold mb-2">
-                Especialidades (selecciona uno o más)
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {specialties.map((r) => (
-                  <label
-                    key={r.ID_specialty}
-                    className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      value={r.ID_specialty}
-                      checked={values.specialties.includes(r.ID_specialty)}
-                      onChange={(e) => {
-                        const specialtyId = Number(e.target.value);
-                        if (e.target.checked) {
-                          setFieldValue("specialties", [
-                            ...values.specialties,
-                            specialtyId,
-                          ]);
-                        } else {
-                          setFieldValue(
-                            "specialties",
-                            values.specialties.filter(
-                              (id) => id !== specialtyId
-                            )
-                          );
-                        }
-                      }}
-                    />
-                    {r.name}
-                  </label>
-                ))}
+
+              <div>
+                <label className="block font-bold mb-2">
+                  Especialidades (selecciona uno o más)
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {specialties.map((r: any) => (
+                    <label
+                      key={r.ID_specialty}
+                      className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-gray-100 hover:bg-green-100 text-sm cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        value={r.ID_specialty}
+                        checked={values.specialties.includes(r.ID_specialty)}
+                        onChange={(e) => {
+                          const specialtyId = Number(e.target.value);
+                          if (e.target.checked) {
+                            setFieldValue("specialties", [
+                              ...values.specialties,
+                              specialtyId,
+                            ]);
+                          } else {
+                            setFieldValue(
+                              "specialties",
+                              values.specialties.filter((id) => id !== specialtyId)
+                            );
+                          }
+                        }}
+                      />
+                      {r.name}
+                    </label>
+                  ))}
+                </div>
+                {touched.specialties && errors.specialties && (
+                  <p className="text-red-500">{errors.specialties}</p>
+                )}
               </div>
-              {touched.specialties && errors.specialties && (
-                <p className="text-red-500">{errors.specialties}</p>
-              )}
             </div>
+          </div>
+        )}
+
+        <div className="flex justify-between mt-6 md:col-span-2">
+          <button
+            type="submit"
+            disabled={selectedUserId === null || loading}
+            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700 disabled:bg-gray-400"
+          >
+            {loading ? "Guardando..." : "Editar"}
+          </button>
+          <button
+            type="button"
+            onClick={handleDeactivate}
+            disabled={selectedUserId === null}
+            className="bg-red-600 text-white py-2 px-6 rounded-full hover:bg-red-700 disabled:bg-gray-400"
+          >
+            Dar de baja
+          </button>
+        </div>
+      </form>
+
+      {modalInfo && modalInfo.show && (
+        <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
+            <h2 className={`text-xl sm:text-2xl font-bold ${modalInfo.type === 'success' ? 'text-green-600' : 'text-red-600'} mb-4`}>
+              {modalInfo.title}
+            </h2>
+            <p className="mb-6 text-sm sm:text-base">
+              {modalInfo.message}
+            </p>
+            <button
+              onClick={() => {
+                setModalInfo(null);
+                if (modalInfo.type === 'success') {
+                  resetForm();
+                  setSelectedUserId(null);
+                  setAvatarPreview(null);
+                  getOperatorUser();
+                }
+              }}
+              className={`${modalInfo.type === 'success' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-colors w-full sm:w-auto`}
+            >
+              Aceptar
+            </button>
           </div>
         </div>
       )}
-
-      {/* Botones */}
-      <div className="flex justify-between mt-6">
-        <button
-          type="submit"
-          disabled={selectedUserId === null || loading}
-          className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700"
-        >
-          {loading ? "Guardando..." : "Editar"}
-        </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          disabled={selectedUserId === null}
-          className="bg-red-600 text-white py-2 px-6 rounded-full hover:bg-red-700"
-        >
-          Dar de baja
-        </button>
-      </div>
-    </form>
+    </>
   );
 };

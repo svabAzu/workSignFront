@@ -9,7 +9,7 @@ import {
     updateSpecialtyRequest,
     deleteSpecialtyRequest
 } from "../api/Specialties";
-import { getOperatorUserRequest, putOperatorUserRequest, deleteOperatorUserRequest } from "../api/OperatorUser";
+import { getOperatorUserRequest, putOperatorUserRequest, updateOperatorUserStateRequest } from "../api/OperatorUser";
 
 import { getTaskUssingGeneralTaskIdRequest } from "../api/Task";
 
@@ -27,12 +27,10 @@ interface GeneralTaskContextType {
     getOperatorUser: () => Promise<void>;
     operatorUsers: any[];
     updateOperatorUser: (id: number, userData: FormData) => Promise<void>;
-    deleteOperatorUser: (id: number) => Promise<void>;
+    updateOperatorUserState: (id: number, state: boolean) => Promise<void>;
     individualTask: any;
     setIndividualTask: (task: any) => void;
-
     getTasksByGeneralTaskId: (id: any) => Promise<void>;
-    
     TasksByGeneralTaskId: any[];
     getGeneralTaskById: (id: any) => Promise<void>;
 }
@@ -129,7 +127,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
     const getOperatorUser = async () => {
   try {
     const res = await getOperatorUserRequest();
-    console.log("Respuesta del backend:", res.data.data);
+    //console.log("Respuesta del backend:", res.data.data);
     setOperatorUsers(res.data.data || []);
   } catch (error) {
     console.error("Error al cargar operadores", error);
@@ -146,12 +144,12 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
   }
 };
 
-    const deleteOperatorUser = async (id: number) => {
+    const updateOperatorUserState = async (id: number, state: boolean) => {
         try {
-            await deleteOperatorUserRequest(id);
+            await updateOperatorUserStateRequest(id, state);
             await getOperatorUser(); // Refresh the list
         } catch (error) {
-            console.error("Error al eliminar usuario operador", error);
+            console.error("Error al actualizar estado del usuario operador", error);
         }
     };
 
@@ -183,7 +181,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             getOperatorUser,
             operatorUsers,
             updateOperatorUser,
-            deleteOperatorUser,
+            updateOperatorUserState,
             individualTask,
             setIndividualTask,
             getGeneralTaskById,
