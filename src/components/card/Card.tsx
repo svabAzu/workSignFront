@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { getTaskPriority } from "../../utils/taskUtils";
+import { useGeneralTask } from "../../context/GeneralTaskContext";
+import { useAuth } from "../../context/AuthContext";
 
 const getDaysRemaining = (deliveryDateStr?: string): number | string => {
   if (!deliveryDateStr) {
@@ -29,6 +31,9 @@ const getTrafficLightColor = (priority: number): string | undefined => {
 
 export const Card = ({ generalTask }: { generalTask: any }) => {
   const [isImageModalOpen, setImageModalOpen] = useState(false);
+  const { updateGeneralTaskState, getGeneralTaskById } = useGeneralTask();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const trafficLightColor = getTrafficLightColor(
     getTaskPriority(generalTask.creation_date, generalTask.estimated_delivery_date)
@@ -89,10 +94,31 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
               <div className="w-full max-w-[150px] md:w-36 h-10 flex items-center justify-center border-2 border-black rounded bg-white text-black font-bold">
                 {generalTask.estimated_delivery_date?.slice(0, 10) || 'Sin fecha'}
               </div>
-              <h2 className="text-base mt-2">
-                <span className="font-bold">Estado: </span>
-                {generalTask.generalTaskState?.name || 'Sin estado'}
-              </h2>
+              <div className="flex flex-row items-center gap-2 mt-2">
+                <h2 className="text-base m-0">
+                  <span className="font-bold">Estado: </span>
+                  {generalTask.generalTaskState?.name || 'Sin estado'}
+                </h2>
+                {user && user.ID_type_user && user.ID_type_user.ID_type_user === 1 && generalTask.generalTaskState?.ID_general_task_states === 2 && (
+                  <button
+                    className="h-8 px-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-bold text-xs whitespace-nowrap flex items-center justify-center"
+                    style={{ minWidth: 100 }}
+                    disabled={loading}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setLoading(true);
+                      await updateGeneralTaskState(generalTask.ID_general_tasks, 5);
+                      // Refrescar la tarea individual si existe (detalle)
+                      if (getGeneralTaskById && generalTask.ID_general_tasks) {
+                        await getGeneralTaskById(generalTask.ID_general_tasks);
+                      }
+                      setLoading(false);
+                    }}
+                  >
+                    {loading ? 'Cambiando...' : 'Pasar a Terminada'}
+                  </button>
+                )}
+              </div>
             </div>
             <div
               className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center text-white font-bold text-sm flex-shrink-0"

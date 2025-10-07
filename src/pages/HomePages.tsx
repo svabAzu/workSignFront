@@ -26,6 +26,10 @@ export const HomePages = () => {
   useEffect(() => {
     getGeneralTask();
     getGeneralTaskState();
+    const interval = setInterval(() => {
+      getGeneralTask();
+    }, 10000); // refresca cada 10 segundos
+    return () => clearInterval(interval);
   }, []);
 
   // Resetear a la página 1 cuando los filtros cambian
@@ -52,6 +56,11 @@ export const HomePages = () => {
     }
 
     let filteredTasks = [...generalTask];
+
+    // OCULTAR tareas Terminadas (ID 5) salvo que el filtro sea ese estado
+    if (!selectedStateId || selectedStateId !== '5') {
+      filteredTasks = filteredTasks.filter(task => task.generalTaskState?.ID_general_task_states !== 5);
+    }
 
     // 1. Filtrar por estado
     if (selectedStateId) {
@@ -104,7 +113,7 @@ export const HomePages = () => {
 
   return (
     <div className="flex flex-col items-center pt-8 w-full justify-center bg-[#F1F1F1]">
-      <section className="w-[98%] max-w-7xl mx-auto h-auto my-4 rounded-3xl min-h-[90dvh] bg-white flex flex-col p-4 sm:p-6 shadow-lg">
+      <section className="w-[98%] min-h-[98dvh] my-4 rounded-4xl bg-white flex flex-col p-6 shadow-lg">
         {/* Barra de filtros */}
         <nav className="bg-custom-blue w-full flex flex-col md:flex-row rounded-b-2xl justify-between items-center px-4 py-3 gap-4">
           {/* Buscador */}

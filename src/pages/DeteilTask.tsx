@@ -21,7 +21,12 @@ export const DetailTask = () => {
     useEffect(() => {
         if (id) {
             getGeneralTaskById(id);
-            getTasksByGeneralTaskId(id)
+            getTasksByGeneralTaskId(id);
+            const interval = setInterval(() => {
+                getGeneralTaskById(id);
+                getTasksByGeneralTaskId(id);
+            }, 10000); // refresca cada 10 segundos
+            return () => clearInterval(interval);
         }
     }, [id]);
 
