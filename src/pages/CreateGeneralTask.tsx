@@ -5,8 +5,7 @@ import { Link, Outlet } from "react-router-dom";
 export const CreateGeneralTask = () => {
     return (
         <div className="flex flex-col items-center pt-8 w-full justify-center bg-[#F1F1F1]">
-            <section className="w-[98%] max-w-7xl mx-auto h-auto my-4 rounded-3xl min-h-[90dvh] bg-white flex flex-col p-4 sm:p-6 shadow-lg">
-
+            <section className="w-[98%] min-h-[98dvh] my-4 rounded-4xl bg-white flex flex-col p-6 shadow-lg">
                 <section className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                     <h1 className="text-2xl sm:text-3xl font-bold text-[#199431] text-center sm:text-left">
                         C R E A R &nbsp; T R A B A J O
@@ -19,19 +18,14 @@ export const CreateGeneralTask = () => {
                     <Link to="/newJob/materials" className="hover:text-[#199431]">
                         Materiales
                     </Link>
-                    <Link to="/newJob/editJob" className="hover:text-[#199431]">
-                        Editar Trabajos
+                    <Link to="/newJob/createTypeJob" className="hover:text-[#199431]">
+                        Crear tipos de trabajo
                     </Link>
                 </nav>
-
-
                 <section className="p-4 mt-4 w-full">
                     <Outlet />
                 </section>
             </section>
-
-
-
         </div>
     )
 }

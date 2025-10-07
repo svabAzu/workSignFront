@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 import { getGeneralTaskRequest, getGeneralTaskIdRequest } from "../api/Generaltask";
-import { getGeneralTaskStateRequest } from "../api/Generaltask";
+import { getGeneralTaskStateRequest, updateGeneralTaskStateRequest } from "../api/Generaltask";
 import {
     getSpecialtiesRequest,
     createSpecialtyRequest,
@@ -28,6 +28,7 @@ interface GeneralTaskContextType {
     operatorUsers: any[];
     updateOperatorUser: (id: number, userData: FormData) => Promise<void>;
     updateOperatorUserState: (id: number, state: boolean) => Promise<void>;
+    updateGeneralTaskState: (id: number, ID_general_task_states: number) => Promise<void>;
     individualTask: any;
     setIndividualTask: (task: any) => void;
     getTasksByGeneralTaskId: (id: any) => Promise<void>;
@@ -48,6 +49,7 @@ export const useGeneralTask = () => {
 }
 
 export function GeneralTaskProvider({ children }: { children: ReactNode }) {
+   
     const [generalTask, setGeneralTask] = useState([]);
 
     const [individualTask, setIndividualTask] = useState<any>(null);
@@ -84,6 +86,16 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             setGeneralTaskState(res.data.data || []);
         } catch (error) {
             setGeneralTaskState([]);
+        }
+    };
+
+     // Cambia el estado de una tarea general
+    const updateGeneralTaskState = async (id: number, ID_general_task_states: number) => {
+        try {
+            await updateGeneralTaskStateRequest(id, ID_general_task_states);
+            await getGeneralTask();
+        } catch (error) {
+            console.error("Error al actualizar el estado de la tarea general", error);
         }
     };
 
@@ -182,6 +194,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             operatorUsers,
             updateOperatorUser,
             updateOperatorUserState,
+            updateGeneralTaskState,
             individualTask,
             setIndividualTask,
             getGeneralTaskById,
