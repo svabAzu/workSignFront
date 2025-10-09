@@ -1,8 +1,109 @@
-import { Link, Outlet } from "react-router-dom";
 
+import { useFormik } from "formik";
+import { PlusIcon } from '@heroicons/react/24/outline';
+import * as Yup from "yup";
+import { useEffect, useState } from "react";
+import { useNewJob } from "../context/NewJobContext";
+import { FieldGroup, StyledSelect } from "../components/newJob/FormNewJob";
+import { CreateClientModal } from "../components/modals/CreateClientModal";
+import { useNavigate } from "react-router-dom";
+import { ErrorModal } from "../components/modals/ErrorModal";
+
+
+
+interface NewJobFormValues {
+    title: string;
+    description: string;
+    client: string;
+    sketch_url: File | null;
+    job: string;
+    type_job: string;
+    time: string;
+    due_date: string;
+}
+
+const validationSchema = Yup.object().shape({
+    title: Yup.string().required("El título es obligatorio"),
+    description: Yup.string().required("La descripción es obligatoria"),
+    client: Yup.string().required("El cliente es obligatorio"),
+    job: Yup.string().required("El trabajo es obligatorio"),
+    type_job: Yup.string().required("El tipo de trabajo es obligatorio"),
+    due_date: Yup.string().required("La fecha es obligatoria"),
+});
 
 
 export const CreateGeneralTask = () => {
+    const { jobs, clients, loading, createGeneralTask } = useNewJob();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+    const handleCreateClient = (values: { name: string; phone: string; company: string }) => {
+        console.log('Creating client:', values);
+        // Aquí se llamará a la función para crear el cliente en el futuro
+    };
+
+    const formik = useFormik<NewJobFormValues>({
+        initialValues: { title: "", description: "", client: "", sketch_url: null, job: "", type_job: "", time: "", due_date: "" },
+        validationSchema: validationSchema,
+        onSubmit: async (formValues) => {
+            // Desestructurar valores del formulario
+            const { time, due_date, job, type_job, client, ...rest } = formValues;
+
+            // --- Transformación de datos para el backend ---
+
+            // 1. Buscar el ID del trabajo seleccionado a partir de su nombre
+            const selectedJob = jobs.find(j => j.name === job);
+            const ID_jobs = selectedJob ? selectedJob.ID_jobs : null;
+
+            // 2. Buscar el ID del cliente seleccionado a partir de su nombre
+            const selectedClient = clients.find(c => c.name === client);
+            const ID_client = selectedClient ? selectedClient.ID_Client : null;
+
+            // 3. Buscar el ID del tipo de trabajo específico y ponerlo en un array
+            // Nota: El backend espera un array de IDs (typeJobIds). Actualmente la UI
+            // solo permite seleccionar un tipo de trabajo. Se enviará un array con ese único ID.
+            const selectedTypeJob = typeJobOptions.find(tj => tj.name === type_job);
+            const typeJobIds = selectedTypeJob ? [selectedTypeJob.ID_type_job] : [];
+
+            // 4. Formatear la fecha de entrega
+            const estimated_delivery_date = new Date(`${due_date}T18:00:00.000Z`).toISOString();
+
+            // --- Construcción del objeto final ---
+            const finalValues = {
+                ...rest, // title, description, sketch_url
+                ID_jobs,
+                ID_client,
+                typeJobIds,
+                estimated_delivery_date,
+            };
+
+            try {
+                console.log("Formulario enviado:", finalValues);
+                await createGeneralTask(finalValues);
+                navigate("/newTask");
+            } catch (err) {
+                setError("No se pudo crear la tarea. Por favor, inténtalo de nuevo.");
+                console.error(err);
+            }
+        },
+    });
+
+    const [typeJobOptions, setTypeJobOptions] = useState<any[]>([]);
+
+    useEffect(() => {
+        const selectedJob = jobs.find(j => j.name === formik.values.job);
+        setTypeJobOptions(selectedJob ? selectedJob.typeJobs : []);
+        formik.setFieldValue('type_job', '');
+        formik.setFieldValue('time', '');
+    }, [formik.values.job, formik.setFieldValue, jobs]);
+
+    useEffect(() => {
+        const selectedTypeJob = typeJobOptions.find(tj => tj.name === formik.values.type_job);
+        formik.setFieldValue('time', selectedTypeJob ? selectedTypeJob.estimated_duration : '');
+    }, [formik.values.type_job, typeJobOptions, formik.setFieldValue]);
+    
+    
     return (
         <div className="flex flex-col items-center pt-8 w-full justify-center bg-[#F1F1F1]">
             <section className="w-[98%] min-h-[98dvh] my-4 rounded-4xl bg-white flex flex-col p-6 shadow-lg">
@@ -11,21 +112,101 @@ export const CreateGeneralTask = () => {
                         C R E A R &nbsp; T R A B A J O
                     </h1>
                 </section>
-                <nav className="bg-[#B9E99E] p-4 rounded-md flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0 text-black font-semibold items-center sm:items-start">
-                    <Link to="/newJob" className="hover:text-[#199431]">
-                        Nuevo
-                    </Link>
-                    <Link to="/newJob/materials" className="hover:text-[#199431]">
-                        Materiales
-                    </Link>
-                    <Link to="/newJob/createTypeJob" className="hover:text-[#199431]">
-                        Crear tipos de trabajo
-                    </Link>
-                </nav>
-                <section className="p-4 mt-4 w-full">
-                    <Outlet />
-                </section>
+                <form onSubmit={formik.handleSubmit} className="bg-white p-2 sm:p-4 md:p-6 rounded-xl w-full max-w-[1800px] 2xl:max-w-[2200px] mx-auto shadow-md">
+                    <fieldset disabled={loading} className="disabled:opacity-75 disabled:cursor-wait">
+                        {/* FILA 1 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                            <div className="xl:col-span-1">
+                                <FieldGroup label="TITULO" error={formik.touched.title && formik.errors.title ? formik.errors.title : undefined}>
+                                    <input type="text" name="title" value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur} className="border border-gray-300 rounded-sm p-2 w-full text-sm" placeholder="Ej: Rótulo para local" />
+                                </FieldGroup>
+                            </div>
+                            <div className="xl:col-span-1">
+                                <FieldGroup label="TRABAJOS" error={formik.touched.job && formik.errors.job ? formik.errors.job : undefined}>
+                                    <StyledSelect name="job" value={formik.values.job} onChange={formik.handleChange} onBlur={formik.handleBlur}>
+                                        <option value="">Seleccionar</option>
+                                        {jobs.map(job => <option key={job.ID_jobs} value={job.name}>{job.name}</option>)}
+                                    </StyledSelect>
+                                </FieldGroup>
+                            </div>
+                            <div className="xl:col-span-1">
+                                <FieldGroup label="ESPECIFICO" error={formik.touched.type_job && formik.errors.type_job ? formik.errors.type_job : undefined}>
+                                    <StyledSelect name="type_job" value={formik.values.type_job} onChange={formik.handleChange} onBlur={formik.handleBlur} disabled={!formik.values.job}>
+                                        <option value="">Seleccionar</option>
+                                        {typeJobOptions.map(tj => <option key={tj.ID_type_job} value={tj.name}>{tj.name}</option>)}
+                                    </StyledSelect>
+                                </FieldGroup>
+                            </div>
+                            <div className="xl:col-span-1">
+                                <FieldGroup label="TIEMPO ESPERADO" error={formik.touched.time && formik.errors.time ? formik.errors.time : undefined}>
+                                    <input type="text" name="time" value={formik.values.time} readOnly className="border border-gray-300 rounded-sm p-2 w-full text-sm bg-gray-100 text-gray-700 font-medium text-center" placeholder="Automático" />
+                                </FieldGroup>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-300 my-4"></div>
+
+                        {/* FILA 2 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                            <div className="xl:col-span-2">
+                                <FieldGroup label="DESCRIPCIÓN" error={formik.touched.description && formik.errors.description ? formik.errors.description : undefined}>
+                                    <textarea name="description" value={formik.values.description} onChange={formik.handleChange} onBlur={formik.handleBlur} rows={5} className="border border-gray-300 rounded-sm p-2 w-full text-sm resize-none" placeholder="Añade detalles sobre el trabajo..." />
+                                </FieldGroup>
+                            </div>
+                            <div className="xl:col-span-2">
+                                <FieldGroup label="FECHA DE ENTREGA" error={formik.touched.due_date && formik.errors.due_date ? formik.errors.due_date : undefined}>
+                                    <input type="date" name="due_date" value={formik.values.due_date} onChange={formik.handleChange} onBlur={formik.handleBlur} className="border border-gray-300 rounded-sm p-2 w-full text-sm" />
+                                </FieldGroup>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-300 my-4"></div>
+
+                        {/* FILA 3 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-center">
+                            <div className="xl:col-span-2">
+                                <FieldGroup label="CLIENTE" error={formik.touched.client && formik.errors.client ? formik.errors.client : undefined}>
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                        <div className="flex-grow">
+                                            <StyledSelect name="client" value={formik.values.client} onChange={formik.handleChange} onBlur={formik.handleBlur}>
+                                                <option value="">Seleccionar cliente</option>
+                                                {clients.map((client) => <option key={client.ID_Client} value={client.name}>{client.name}</option>)}
+                                            </StyledSelect>
+                                        </div>
+                                        <button type="button" onClick={() => setIsModalOpen(true)} className="w-9 h-9 flex items-center justify-center bg-green-500 rounded-full hover:bg-green-600 transition duration-150 p-1">
+                                            <PlusIcon className="h-5 w-5 text-white" />
+                                        </button>
+                                    </div>
+                                </FieldGroup>
+                            </div>
+                            <div className="xl:col-span-2">
+                                <label className="bg-white text-black text-sm border border-gray-300 py-2 px-4 rounded-sm cursor-pointer hover:bg-gray-50 transition duration-150 flex flex-col sm:flex-row items-center gap-3">
+                                    <div className="w-20 h-20 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-gray-300 flex-shrink-0">
+                                        {formik.values.sketch_url ? <img src={URL.createObjectURL(formik.values.sketch_url)} alt="Boceto" className="object-cover w-full h-full" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-xs text-gray-500">Boceto</div>}
+                                    </div>
+                                    <span>Seleccionar archivo</span>
+                                    <input type="file" name="sketch_url" accept="image/*" onChange={(e) => formik.setFieldValue("sketch_url", e.currentTarget.files?.[0] || null)} className="hidden" />
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* BOTÓN DE ENVÍO */}
+                        <div className="flex justify-center mt-8">
+                            <button type="submit" className="bg-green-600 text-white font-bold py-2 px-8 rounded-sm hover:bg-green-700 transition duration-150 text-base w-full max-w-xs">Siguiente</button>
+                        </div>
+                    </fieldset>
+                </form>
             </section>
+            <CreateClientModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onCreateClient={handleCreateClient} 
+            />
+            <ErrorModal 
+                isOpen={!!error}
+                onClose={() => setError(null)}
+                message={error || ""}
+            />
         </div>
     )
 }

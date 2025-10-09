@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { getTaskPriority } from "../../utils/taskUtils";
+import { getTaskPriority, formatDate } from "../../utils/taskUtils";
 import { useGeneralTask } from "../../context/GeneralTaskContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -92,7 +92,7 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
                 <span className="font-bold">Fecha de entrega</span>
               </h2>
               <div className="w-full max-w-[150px] md:w-36 h-10 flex items-center justify-center border-2 border-black rounded bg-white text-black font-bold">
-                {generalTask.estimated_delivery_date?.slice(0, 10) || 'Sin fecha'}
+                {formatDate(generalTask.estimated_delivery_date)}
               </div>
               <div className="flex flex-row items-center gap-2 mt-2">
                 <h2 className="text-base m-0">

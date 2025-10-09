@@ -6,6 +6,7 @@ import {
     type ReactNode,
 } from "react";
 import { getJobAndTypeJobRequest, getClientRequest } from "../api/NewJob";
+import { createGeneralTaskRequest } from "../api/Generaltask";
 
 // --- Interfaces ---
 interface TypeJob {
@@ -34,6 +35,7 @@ interface NewJobContextType {
     clients: Client[];
     loading: boolean;
     loadInitialData: () => Promise<void>;
+    createGeneralTask: (task: any) => Promise<void>;
 }
 
 interface NewJobProviderProps {
@@ -78,6 +80,14 @@ export const NewJobProvider = ({ children }: NewJobProviderProps) => {
         }
     };
 
+    const createGeneralTask = async (task: any) => {
+        try {
+            await createGeneralTaskRequest(task);
+        } catch (error) {
+            console.error("Error al crear la tarea general", error);
+        }
+    };
+
     useEffect(() => {
         loadInitialData();
     }, []);
@@ -87,7 +97,8 @@ export const NewJobProvider = ({ children }: NewJobProviderProps) => {
             jobs,
             clients,
             loading,
-            loadInitialData
+            loadInitialData,
+            createGeneralTask
         }}>
             {children}
         </NewJobContext.Provider>

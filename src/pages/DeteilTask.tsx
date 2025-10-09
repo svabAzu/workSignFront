@@ -82,7 +82,7 @@ export const DetailTask = () => {
                                                 {TasksByGeneralTaskId && TasksByGeneralTaskId.flatMap((task) => task.materialsTasks).length > 0 ? (
                                                     TasksByGeneralTaskId.flatMap((task) => task.materialsTasks).map((material, index) => (
                                                         <div key={index} className="p-2 border-b last:border-b-0">
-                                                            <p><span className="font-semibold">{material.material.name}:</span> {material.quantity}</p>
+                                                            <p><span className="font-semibold">{material.material.name}</span></p>
                                                             {material.observations && <p className="text-xs text-gray-600 pl-2">Observaciones: {material.observations}</p>}
                                                         </div>
                                                     ))
