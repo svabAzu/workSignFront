@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { LoginPages } from "../pages/LoginPages";
 
 import {
-  //RegisterPages, 
+ 
   RegisterForm
 } from "../pages/RegisterPages";
 
@@ -13,7 +13,7 @@ import { OperatorEditPages } from '../pages/OperatorEditPages';
 import { SpecialtyPages } from '../pages/SpecialtyPages';
 import { DetailTask } from '../pages/DeteilTask';
 import { CreateGeneralTask } from '../pages/CreateGeneralTask';
-import { FormNewJob, FormMaterials, FormCreateJob} from '../components/newJob/FormNewJob';
+
 
 export default function MyRouters() {
   return (
@@ -27,14 +27,12 @@ export default function MyRouters() {
 
 
 
-        <Route path='/newJob' element={<CreateGeneralTask />} >
-          <Route path='' element={<FormNewJob/>} />
-          <Route path='materials' element={<FormMaterials/>} />
-          <Route path='createTypeJob' element={<FormCreateJob/>} />
+        <Route path='/newJob' element={<CreateGeneralTask />} />
+          
 
-        </Route>
+       
 
-        {/* <Route path='/register' element={<RegisterPages />} /> */}
+        
 
         <Route path='/setting' element={<SettingsPages />}>
           <Route path='register' element={<RegisterForm />} />

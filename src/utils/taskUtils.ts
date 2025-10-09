@@ -33,3 +33,17 @@ export const getTaskPriority = ( creationDateStr?: string,deliveryDateStr?: stri
   if (timeRemaining <= ONE_WEEK_IN_MS) return 2; // Amarillo
   return 1; // Verde (más de una semana)
 };
+
+export const formatDate = (dateString?: string): string => {
+  if (!dateString) {
+    return 'Sin fecha';
+  }
+  const datePart = dateString.slice(0, 10);
+  const [year, month, day] = datePart.split('-');
+
+  if (year && month && day && year.length === 4 && month.length === 2 && day.length === 2) {
+      return `${day}/${month}/${year}`;
+  }
+
+  return datePart || 'Sin fecha';
+};
