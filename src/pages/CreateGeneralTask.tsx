@@ -1,4 +1,3 @@
-
 import { useFormik } from "formik";
 import { PlusIcon } from '@heroicons/react/24/outline';
 import * as Yup from "yup";
@@ -38,11 +37,6 @@ export const CreateGeneralTask = () => {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const handleCreateClient = (values: { name: string; phone: string; company: string }) => {
-        console.log('Creating client:', values);
-        // Aquí se llamará a la función para crear el cliente en el futuro
-    };
-
     const formik = useFormik<NewJobFormValues>({
         initialValues: { title: "", description: "", client: "", sketch_url: null, job: "", type_job: "", time: "", due_date: "" },
         validationSchema: validationSchema,
@@ -79,9 +73,18 @@ export const CreateGeneralTask = () => {
             };
 
             try {
-                console.log("Formulario enviado:", finalValues);
-                await createGeneralTask(finalValues);
-                navigate("/newTask");
+                //console.log("Formulario enviado:", finalValues);
+                const response = await createGeneralTask(finalValues);
+
+                // The ID is located at response.data.data.ID_general_tasks
+                const newTaskId = response?.data?.data?.ID_general_tasks;
+                if (newTaskId) {
+                    navigate(`/newJob/${newTaskId}/newTask`);
+                } else {
+                    // Fallback if ID is not returned
+                    setError("No se pudo obtener el ID de la nueva tarea desde la respuesta de la API.");
+                    console.error("API response did not contain expected ID:", response);
+                }
             } catch (err) {
                 setError("No se pudo crear la tarea. Por favor, inténtalo de nuevo.");
                 console.error(err);
@@ -192,7 +195,7 @@ export const CreateGeneralTask = () => {
 
                         {/* BOTÓN DE ENVÍO */}
                         <div className="flex justify-center mt-8">
-                            <button type="submit" className="bg-green-600 text-white font-bold py-2 px-8 rounded-sm hover:bg-green-700 transition duration-150 text-base w-full max-w-xs">Siguiente</button>
+                            <button type="submit" className="bg-green-600 cursor-pointer text-white font-bold py-2 px-8 rounded-sm hover:bg-green-700 transition duration-150 text-base w-full max-w-xs">Siguiente</button>
                         </div>
                     </fieldset>
                 </form>
@@ -200,7 +203,6 @@ export const CreateGeneralTask = () => {
             <CreateClientModal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
-                onCreateClient={handleCreateClient} 
             />
             <ErrorModal 
                 isOpen={!!error}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useNewJob } from '../../context/NewJobContext'; // Importar el contexto
 
 interface CreateClientModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateClient: (values: { name: string; phone: string; company: string }) => void;
 }
 
 const validationSchema = Yup.object({
@@ -14,7 +14,9 @@ const validationSchema = Yup.object({
   company: Yup.string().required('La compañía es requerida'),
 });
 
-export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, onClose, onCreateClient }) => {
+export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, onClose }) => {
+  const { createClient } = useNewJob(); // Usar el contexto
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -22,8 +24,8 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
       company: '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      onCreateClient(values);
+    onSubmit: async (values) => {
+      await createClient(values); // Llamar a la función del contexto
       formik.resetForm();
       onClose();
     },
@@ -109,8 +111,9 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
             <button
               type="submit"
               className="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              disabled={formik.isSubmitting}
             >
-              Crear Cliente
+              {formik.isSubmitting ? 'Creando...' : 'Crear Cliente'}
             </button>
           </div>
         </form>

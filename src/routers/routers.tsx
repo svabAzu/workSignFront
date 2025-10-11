@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { LoginPages } from "../pages/LoginPages";
 
 import {
- 
+
   RegisterForm
 } from "../pages/RegisterPages";
 
@@ -13,6 +13,7 @@ import { OperatorEditPages } from '../pages/OperatorEditPages';
 import { SpecialtyPages } from '../pages/SpecialtyPages';
 import { DetailTask } from '../pages/DeteilTask';
 import { CreateGeneralTask } from '../pages/CreateGeneralTask';
+import { CreateTask } from '../pages/CreateTask';
 
 
 export default function MyRouters() {
@@ -28,11 +29,12 @@ export default function MyRouters() {
 
 
         <Route path='/newJob' element={<CreateGeneralTask />} />
-          
 
-       
+        <Route path='/newJob/:ID_general_tasks/newTask' element={<CreateTask />} />
+       {/* <Route path='/newTask' element={<CreateTask />} /> */}
 
-        
+
+
 
         <Route path='/setting' element={<SettingsPages />}>
           <Route path='register' element={<RegisterForm />} />
