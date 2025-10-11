@@ -31,6 +31,7 @@ const getTrafficLightColor = (priority: number): string | undefined => {
 
 export const Card = ({ generalTask }: { generalTask: any }) => {
   const [isImageModalOpen, setImageModalOpen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
   const { updateGeneralTaskState, getGeneralTaskById } = useGeneralTask();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -48,11 +49,13 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
   const handleImageClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setImageModalOpen(true);
+    setIsZoomed(false);
   };
 
   const closeModal = (e: React.MouseEvent) => {
     e.preventDefault();
     setImageModalOpen(false);
+    setIsZoomed(false);
   };
 
   return (
@@ -132,30 +135,36 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
         </div>
       </Link>
 
-
-
       {isImageModalOpen && (
-       <div
-    className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4"
-    onClick={closeModal}
-  >
-    <div
-      className="relative bg-white p-1 rounded-lg shadow-xl max-w-full sm:max-w-4xl max-h-[80vh] w-full"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <button
-        onClick={closeModal}
-        className="absolute top-2 right-3 text-black text-3xl sm:text-4xl font-bold hover:text-gray-700"
-      >
-        &times;
-      </button>
-      <img
-        src={imageUrl}
-        alt={`Imagen ampliada de ${generalTask.title}`}
-        className="object-contain max-w-full max-h-[75vh] mx-auto"
-      />
-    </div>
-  </div>
+        <div
+          className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4"
+          onClick={closeModal}
+        >
+          <div
+            className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-3 text-black text-4xl font-bold hover:text-gray-700 z-20"
+            >
+              &times;
+            </button>
+            {/* The container that provides the scrollbars */}
+            <div className="w-full h-full overflow-auto">
+              <img
+                src={imageUrl}
+                alt={`Imagen ampliada de ${generalTask.title}`}
+                onClick={() => setIsZoomed(!isZoomed)}
+                className={`transition-all duration-300 ease-in-out ${
+                  isZoomed
+                    ? 'min-w-[150%] min-h-[100%] w-auto h-auto cursor-zoom-out'
+                    : 'max-w-full max-h-[75vh] w-full h-full object-contain cursor-zoom-in'
+                }`}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

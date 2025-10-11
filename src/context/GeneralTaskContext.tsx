@@ -1,6 +1,8 @@
 
 import type { ReactNode } from "react";
-import { createContext, useContext, useState } from "react";
+import {
+    createContext, useContext, useState, useCallback,
+} from "react";
 import { getGeneralTaskRequest, getGeneralTaskIdRequest } from "../api/Generaltask";
 import { getGeneralTaskStateRequest, updateGeneralTaskStateRequest } from "../api/Generaltask";
 import {
@@ -61,112 +63,111 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
 
     //Peticiones de tareas generales y estados
 
-    const getGeneralTask = async () => {
+    const getGeneralTask = useCallback(async () => {
         try {
             const res = await getGeneralTaskRequest();
             setGeneralTask(res.data.data || []);
         } catch (error) {
             setGeneralTask([]);
         }
-    };
+    }, []);
 
-    const getGeneralTaskById = async (id: any) => {
+    const getGeneralTaskById = useCallback(async (id: any) => {
         try {
             const res = await getGeneralTaskIdRequest(id);
             setIndividualTask(res.data.data);
         } catch (error) {
             console.error(error);
         }
-    };
+    }, []);
 
 
-    const getGeneralTaskState = async () => {
+    const getGeneralTaskState = useCallback(async () => {
         try {
             const res = await getGeneralTaskStateRequest();
             setGeneralTaskState(res.data.data || []);
         } catch (error) {
             setGeneralTaskState([]);
         }
-    };
+    }, []);
 
      // Cambia el estado de una tarea general
-    const updateGeneralTaskState = async (id: number, ID_general_task_states: number) => {
+    const updateGeneralTaskState = useCallback(async (id: number, ID_general_task_states: number) => {
         try {
             await updateGeneralTaskStateRequest(id, ID_general_task_states);
             await getGeneralTask();
         } catch (error) {
             console.error("Error al actualizar el estado de la tarea general", error);
         }
-    };
+    }, [getGeneralTask]);
 
     //Peticiones de especialidades y usuarios
-    const getSpecialties = async () => {
+    const getSpecialties = useCallback(async () => {
         try {
             const res = await getSpecialtiesRequest();
             setSpecialties(res.data.data || []);
         } catch (error) {
             setSpecialties([]);
         }
-    };
+    }, []);
 
-    const addSpecialty = async (specialty: { name: string }) => {
+    const addSpecialty = useCallback(async (specialty: { name: string }) => {
         try {
             await createSpecialtyRequest(specialty);
             await getSpecialties(); 
         } catch (error) {
             console.error("Error al agregar especialidad:", error);
         }
-    };
+    }, [getSpecialties]);
 
-    const updateSpecialty = async (id: number, specialty: { name: string }) => {
+    const updateSpecialty = useCallback(async (id: number, specialty: { name: string }) => {
         try {
             await updateSpecialtyRequest(id, specialty);
             await getSpecialties(); 
         } catch (error) {
             console.error("Error al actualizar especialidad:", error);
         }
-    };
+    }, [getSpecialties]);
 
-    const deleteSpecialty = async (id: number) => {
+    const deleteSpecialty = useCallback(async (id: number) => {
         try {
             await deleteSpecialtyRequest(id);
             await getSpecialties(); 
         } catch (error) {
             console.error("Error al eliminar especialidad:", error);
         }
-    };
+    }, [getSpecialties]);
 
-    const getOperatorUser = async () => {
-  try {
-    const res = await getOperatorUserRequest();
-    //console.log("Respuesta del backend:", res.data.data);
-    setOperatorUsers(res.data.data || []);
-  } catch (error) {
-    console.error("Error al cargar operadores", error);
-    setOperatorUsers([]);
-  }
-};
+    const getOperatorUser = useCallback(async () => {
+        try {
+            const res = await getOperatorUserRequest();
+            setOperatorUsers(res.data.data || []);
+        } catch (error) {
+            console.error("Error al cargar operadores", error);
+            setOperatorUsers([]);
+        }
+    }, []);
 
-   const updateOperatorUser = async (id: number, userData: FormData) => {
-  try {
-    await putOperatorUserRequest(id, userData);
-    await getOperatorUser(); // vuelve a cargar la lista
-  } catch (error) {
-    console.error("Error al actualizar usuario operador", error);
-  }
-};
+   const updateOperatorUser = useCallback(async (id: number, userData: FormData) => {
+        try {
+            await putOperatorUserRequest(id, userData);
+            await getOperatorUser(); // vuelve a cargar la lista
+        } catch (error) {
+            console.error("Error al actualizar usuario operador", error);
+        }
+    }, [getOperatorUser]);
 
-    const updateOperatorUserState = async (id: number, state: boolean) => {
+    const updateOperatorUserState = useCallback(async (id: number, state: boolean) => {
         try {
             await updateOperatorUserStateRequest(id, state);
             await getOperatorUser(); // Refresh the list
         } catch (error) {
             console.error("Error al actualizar estado del usuario operador", error);
         }
-    };
+    }, [getOperatorUser]);
 
     //Peticion para obtener las tareas relacionadas a una tarea general
-    const getTasksByGeneralTaskId = async (id: any) => {
+    const getTasksByGeneralTaskId = useCallback(async (id: any) => {
         try {
             const res = await getTaskUssingGeneralTaskIdRequest(id);
             setTasksByGeneralTaskId(res.data.data || []);
@@ -175,7 +176,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             console.error(error);
             setTasksByGeneralTaskId([]);
         }
-    };
+    }, []);
 
 
 

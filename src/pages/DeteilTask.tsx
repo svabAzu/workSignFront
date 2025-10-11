@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 import { Card } from "../components/card/Card";
 import { IoMdClose } from "react-icons/io";
 import { TaskCard } from "../components/card/TaskCard";
+import { PlusIcon } from "@heroicons/react/24/solid";
 
 export const DetailTask = () => {
     const { id } = useParams();
@@ -143,6 +144,14 @@ export const DetailTask = () => {
                                 <TaskCard key={task.ID_task} task={task} index={index} />
                             ))}
                         </article>
+
+                        <div className="flex justify-center mt-6">
+                            <Link to={`/newJob/${id}/newTask`}>
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
+                                    <PlusIcon className="h-6 w-6" />
+                                </button>
+                            </Link>
+                        </div>
 
                     </div>
                     :
