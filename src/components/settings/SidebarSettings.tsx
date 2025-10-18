@@ -17,9 +17,18 @@ export const SidebarSettings = () => {
  
   <section className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
     <h1 className="text-2xl sm:text-3xl font-bold text-[#199431] text-center sm:text-left">
-      C O N F I G U R A C I Ó N
+      C O N F I G U R A C I Ó N  D E  U S U A R I O
     </h1>
     <div className="flex items-center space-x-4">
+       <div className="text-center sm:text-left">
+        <p className="font-bold text-lg">{user.name + " " + user.last_name}</p>
+        {/* <Link
+          to="/perfil"
+          className="text-sm text-gray-500 hover:underline"
+        >
+          Editar perfil
+        </Link> */}
+      </div>
       <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
         <img
           src={avatarUrl}
@@ -27,15 +36,7 @@ export const SidebarSettings = () => {
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="text-center sm:text-left">
-        <p className="font-bold text-lg">{user.name + " " + user.last_name}</p>
-        <Link
-          to="/perfil"
-          className="text-sm text-gray-500 hover:underline"
-        >
-          Editar perfil
-        </Link>
-      </div>
+     
     </div>
   </section>
 
@@ -44,8 +45,8 @@ export const SidebarSettings = () => {
     <Link to="/setting/register" className="hover:text-[#199431]">
       Registro
     </Link>
-    <Link to="/setting/edit-operario" className="hover:text-[#199431]">
-      Editar operario
+    <Link to="/setting/edit" className="hover:text-[#199431]">
+      Editar
     </Link>
     <Link to="/setting/specialty" className="hover:text-[#199431]">
       Especialidades
