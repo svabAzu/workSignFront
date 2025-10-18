@@ -38,7 +38,7 @@ export default function MyRouters() {
 
         <Route path='/setting' element={<SettingsPages />}>
           <Route path='register' element={<RegisterForm />} />
-          <Route path='edit-operario' element={<OperatorEditPages />} />
+          <Route path='edit' element={<OperatorEditPages />} />
           <Route path='specialty' element={<SpecialtyPages />} />
         </Route>
 

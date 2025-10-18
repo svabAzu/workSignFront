@@ -115,7 +115,7 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
                       setLoading(false);
                     }}
                   >
-                    {loading ? 'Cambiando...' : 'Pasar a Terminada'}
+                    {loading ? 'Cambiando...' : 'Terminar trabajo'}
                   </button>
                 )}
               </div>

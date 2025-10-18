@@ -14,8 +14,8 @@ export const DetailTask = () => {
     } = useGeneralTask();
 
 
-    console.log("Esto viene del general tarea", individualTask);
-    console.log("esto viene de task", TasksByGeneralTaskId);
+   // console.log("Esto viene del general tarea", individualTask);
+    //console.log("esto viene de task", TasksByGeneralTaskId);
 
 
     useEffect(() => {
