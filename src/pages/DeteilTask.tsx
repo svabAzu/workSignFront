@@ -166,7 +166,7 @@ export const DetailTask = () => {
               </div>
             </main>
 
-            <article className="w-full max-w-7xl mx-auto h-auto mt-10">
+            <article className="w-full mx-auto h-auto mt-10">
               {/* Header for larger screens */}
               <div className="hidden md:flex items-center text-gray-500 font-bold px-4 py-2 border-b">
                 <div className="w-2/5">Etapa</div>
