@@ -113,7 +113,7 @@ export const RegisterForm = () => {
     return (
       <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50 p-4">
         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
-          <h2 className="text-xl sm:text-2xl font-bold text-green-600 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#199431] mb-4">
             ¡Registro Exitoso!
           </h2>
           <p className="mb-6 text-sm sm:text-base">
@@ -124,7 +124,7 @@ export const RegisterForm = () => {
               setShowSuccessModal(false);
               resetForm();
             }}
-            className="bg-green-600 text-white font-bold py-2 px-4 sm:px-6 rounded-full hover:bg-green-700 transition-colors w-full sm:w-auto"
+            className="bg-[#199431] text-white font-bold py-2 px-4 sm:px-6 rounded-full hover:bg-[#ADC708] hover:text-black transition-colors w-full sm:w-auto"
           >
             Aceptar
           </button>
@@ -138,7 +138,7 @@ export const RegisterForm = () => {
       onSubmit={handleSubmit}
       className="bg-white p-4 sm:p-6 rounded-xl max-w-5xl mx-auto w-full"
     >
-      <h1 className="text-green-600 font-bold text-xl sm:text-2xl mb-6 uppercase tracking-wide text-center sm:text-left">
+      <h1 className="text-xl sm:text-2xl mb-6 uppercase tracking-wide text-center sm:text-left">
         Registro de usuarios:
       </h1>
 
@@ -258,7 +258,7 @@ export const RegisterForm = () => {
   <div className="flex flex-col items-start">
     <label
       htmlFor="avatar_url"
-      className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-green-700 transition-colors text-sm"
+      className="bg-[#199431] text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-[#ADC708] hover:text-black transition-colors text-sm"
     >
       Seleccionar imagen
     </label>
@@ -338,7 +338,7 @@ export const RegisterForm = () => {
                       }
                     }}
                     onBlur={handleBlur}
-                    className="accent-green-600"
+                    className="accent-[#199431]"
                   />
                   {r.name}
                 </label>
@@ -352,7 +352,7 @@ export const RegisterForm = () => {
       <div className="flex justify-center mt-6">
         <button
           type="submit"
-          className="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 w-full sm:w-auto"
+          className="bg-[#199431] text-white font-bold py-2 px-6 rounded-full hover:bg-[#ADC708] hover:text-black w-full sm:w-auto"
         >
           Registrar
         </button>

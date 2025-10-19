@@ -111,8 +111,8 @@ export const CreateGeneralTask = () => {
         <div className="flex flex-col items-center pt-8 w-full justify-center bg-[#F1F1F1]">
             <section className="w-[98%] min-h-[98dvh] my-4 rounded-4xl bg-white flex flex-col p-6 shadow-lg">
                 <section className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#199431] text-center sm:text-left">
-                        C R E A R &nbsp; T R A B A J O
+                    <h1 className="text-2xl text-[#199431] sm:text-3xl font-bold text-center sm:text-left">
+                        CREAR NUEVO TRABAJO
                     </h1>
                 </section>
                 <form onSubmit={formik.handleSubmit} className="bg-white p-2 sm:p-4 md:p-6 rounded-xl w-full max-w-[1800px] 2xl:max-w-[2200px] mx-auto shadow-md">
@@ -176,7 +176,7 @@ export const CreateGeneralTask = () => {
                                                 {clients.map((client) => <option key={client.ID_Client} value={client.name}>{client.name}</option>)}
                                             </StyledSelect>
                                         </div>
-                                        <button type="button" onClick={() => setIsModalOpen(true)} className="w-9 h-9 flex items-center justify-center bg-green-500 rounded-full hover:bg-green-600 transition duration-150 p-1">
+                                        <button type="button" onClick={() => setIsModalOpen(true)} className="w-9 h-9 flex items-center justify-center bg-[#199431] rounded-full hover:bg-[#ADC708] hover:text-black text-white transition duration-150 p-1">
                                             <PlusIcon className="h-5 w-5 text-white" />
                                         </button>
                                     </div>
@@ -195,7 +195,7 @@ export const CreateGeneralTask = () => {
 
                         {/* BOTÓN DE ENVÍO */}
                         <div className="flex justify-center mt-8">
-                            <button type="submit" className="bg-green-600 cursor-pointer text-white font-bold py-2 px-8 rounded-sm hover:bg-green-700 transition duration-150 text-base w-full max-w-xs">Siguiente</button>
+                            <button type="submit" className="bg-[#199431] cursor-pointer text-white font-bold py-2 px-8 rounded-sm hover:bg-[#ADC708] hover:text-black transition duration-150 text-base w-full max-w-xs">Siguiente</button>
                         </div>
                     </fieldset>
                 </form>
