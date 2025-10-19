@@ -133,7 +133,7 @@ export const HomePages = () => {
             {/* Botón Prioridad */}
             <button
               onClick={handleSortByPriority}
-              className="w-full sm:w-auto flex items-center justify-center rounded-full px-5 py-2 bg-[#199431] text-white font-bold"
+              className="w-full sm:w-auto flex items-center justify-center rounded-full px-5 py-2 bg-[#199431] text-white font-bold hover:bg-[#ADC708] hover:text-black"
             >
               Prioridad {sortOrder === 'desc' ? (
                 <MdArrowDropUp className="w-6 h-6" />

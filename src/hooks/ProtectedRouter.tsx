@@ -30,7 +30,7 @@ export const ProtectedRouter = ({ redirectTo, children }: ProtectedRouterProps) 
                     <p className="mb-4">Tu usuario no tiene permisos para acceder a esta plataforma web.</p>
                     <button
                         onClick={handleLogout}
-                        className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700"
+                        className="bg-[#199431] text-white px-6 py-2 rounded-full hover:bg-[#ADC708] hover:text-black"
                     >
                         Volver al login
                     </button>

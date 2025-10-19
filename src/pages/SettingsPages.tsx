@@ -10,8 +10,8 @@ export const SettingsPages = () => {
         <SidebarSettings />
         {location.pathname === '/setting' && (
           <section className="flex flex-col justify-center items-center">
-            <img className=" max-w-20 mt-20" src="/iconos/WorkSign-Engranaje.png" alt="Isotipo de la empresa" />
-            <h1 className="mt-5 text-2xl ">Manual de Usuario</h1>
+            <img className=" max-w-20 mt-20" src="/iconos/engranajeAnimado.gif" alt="Isotipo de la empresa" />
+            <h1 className="mt-5 text-2xl ">MANUAL DE USUARIO</h1>
           </section>
         )}
         <Outlet />

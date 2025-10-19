@@ -46,7 +46,7 @@ export const LoginPages = () => {
     <section className="w-full md:w-1/2 flex flex-col items-center justify-center gap-6 py-10">
       <img
         className="w-24 sm:w-32 md:w-48 lg:w-56 transition-all duration-300"
-        src="/iconos/WorkSign-Engranaje.png"
+        src="/iconos/engranajeAnimado.gif"
         alt="Isotipo de la empresa"
       />
       <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center">
@@ -111,7 +111,7 @@ export const LoginPages = () => {
               </div>
             ))}
             <button
-              className="mt-6 w-44 h-12 hover:bg-[#ADC708] text-white hover:text-black font-bold rounded-2xl border-2 border-transparent bg-green-600 transition-colors duration-200"
+              className="mt-6 w-44 h-12 hover:bg-[#ADC708] text-white hover:text-black font-bold rounded-2xl border-2 border-transparent bg-[#199431] transition-colors duration-200"
               type="submit"
             >
               Ingresar
