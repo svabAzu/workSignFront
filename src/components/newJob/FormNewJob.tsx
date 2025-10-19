@@ -22,7 +22,7 @@ export const StyledSelect = ({ name, value, onChange, onBlur, children, disabled
             onChange={onChange}
             onBlur={onBlur}
             disabled={disabled}
-            className="appearance-none border border-gray-300 rounded-sm p-2 w-full text-sm bg-white cursor-pointer focus:ring-green-500 focus:border-green-500 pr-8 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="appearance-none border border-gray-300 rounded-sm p-2 w-full text-sm bg-white cursor-pointer focus:ring-[#199431] focus:border-[#ADC708] pr-8 disabled:bg-gray-100 disabled:cursor-not-allowed"
         >
             {children}
         </select>

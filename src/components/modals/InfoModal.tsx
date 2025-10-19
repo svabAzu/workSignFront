@@ -39,7 +39,7 @@ export const InfoModal = ({ isOpen, onClose, title, message, isSuccess }: InfoMo
               <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <DialogTitle
                   as="h3"
-                  className={`text-lg font-medium leading-6 ${isSuccess ? 'text-green-600' : 'text-red-600'}`}
+                  className={`text-lg font-medium leading-6 ${isSuccess ? 'text-[#199431]' : 'text-red-600'}`}
                 >
                   {title}
                 </DialogTitle>
@@ -50,7 +50,7 @@ export const InfoModal = ({ isOpen, onClose, title, message, isSuccess }: InfoMo
                 <div className="mt-4">
                   <button
                     type="button"
-                    className={`inline-flex justify-center rounded-md border border-transparent ${isSuccess ? 'bg-green-100 text-green-900 hover:bg-green-200' : 'bg-red-100 text-red-900 hover:bg-red-200'} px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${isSuccess ? 'focus-visible:ring-green-500' : 'focus-visible:ring-red-500'}`}
+                    className={`inline-flex justify-center rounded-md border border-transparent ${isSuccess ? 'bg-green-100 text-[#199431] hover:bg-green-200' : 'bg-red-100 text-red-900 hover:bg-red-200'} px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${isSuccess ? 'focus-visible:ring-[#ADC708]' : 'focus-visible:ring-red-500'}`}
                     onClick={onClose}
                   >
                     Cerrar

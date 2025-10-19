@@ -23,9 +23,9 @@ const getDaysRemaining = (deliveryDateStr?: string): number | string => {
 };
 
 const getTrafficLightColor = (priority: number): string | undefined => {
-  if (priority === 3) return "#dc3545"; // Rojo
-  if (priority === 2) return "#ffc107"; // Amarillo
-  if (priority === 1) return "#28a745"; // Verde
+  if (priority === 3) return "#DC3545"; // Rojo
+  if (priority === 2) return "#FFC107"; // Amarillo
+  if (priority === 1) return "#199431"; // Verde
   return undefined;
 };
 
@@ -62,13 +62,10 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
     <>
       <Link
         to={`/individualTask/${generalTask.ID_general_tasks}`}
-        className="h-auto flex flex-col md:flex-row justify-start rounded-lg my-4 mx-2 sm:mx-4 p-4 border-solid border-2 shadow-xl gap-4"
-        style={{
-          borderColor: generalTask.generalTaskState?.color_code || '#ACACAE',
-        }}
+        className="h-auto flex flex-col  md:flex-row justify-start rounded-lg my-4 mx-2 sm:mx-4 p-4 border-solid border-2 shadow-xl border-[#199431] hover:border-[#ADC708] gap-4"
       >
         <div
-          className="w-24 h-24 md:w-32 md:h-32 mx-auto md:mx-0 md:ml-5 bg-gray-200 rounded-full overflow-hidden border border-gray-300 cursor-pointer flex-shrink-0"
+          className="w-24 h-24 md:w-32 md:h-32 mx-auto md:mx-0 md:ml-5  bg-gray-200 rounded-full overflow-hidden border border-gray-300 cursor-pointer transition-transform hover:scale-105 hover:border-solid hover:border-[#199431] hover:border-5 flex-shrink-0"
           onClick={handleImageClick}
         >
           <img
@@ -104,7 +101,7 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
                 </h2>
                 {user && user.ID_type_user && user.ID_type_user.ID_type_user === 1 && generalTask.generalTaskState?.ID_general_task_states === 2 && (
                   <button
-                    className="h-8 px-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-bold text-xs whitespace-nowrap flex items-center justify-center"
+                    className="h-8 px-3 bg-[#199431] text-white rounded-full hover:bg-[#ADC708] hover:text-black font-bold text-xs whitespace-nowrap flex items-center justify-center"
                     style={{ minWidth: 100 }}
                     disabled={loading}
                     onClick={async (e) => {

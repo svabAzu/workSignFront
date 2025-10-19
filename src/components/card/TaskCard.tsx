@@ -46,7 +46,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index }) => {
             {/* Task Title */}
             <div className="flex items-center mb-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white mr-4"
-                    style={{ backgroundColor: '#8BC34A' }}>
+                    style={{ backgroundColor: '#ADC708' }}>
                     {index + 1}
                 </div>
                 <div className="w-full md:w-2/5">
@@ -64,7 +64,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index }) => {
 
                         {/* Operator Name */}
                         <div className="flex items-center md:w-1/5 mb-2 md:mb-0">
-                            <span className="text-xl mr-2" style={{ color: '#4CAF50' }}>
+                            <span className="text-xl mr-2" style={{ color: '#199431' }}>
                                 👤
                             </span>
                             <span className="text-gray-700">{operator.user.name} {operator.user.last_name}</span>

@@ -95,8 +95,8 @@ export const CreateTask = () => {
         message={modalContent.message}
         isSuccess={modalContent.isSuccess}
       />
-      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-6">CREAR TAREA</h1>
+      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-4 sm:p-6">
+        <h1 className="text-2xl sm:text-3xl  text-[#199431] mb-6">CREAR TAREA</h1>
 
         <Formik
           initialValues={initialFormValues}
@@ -152,7 +152,7 @@ export const CreateTask = () => {
                                 <TrashIcon className="h-5 w-5 text-white" />
                               </button>
                               {index === values.operators.length - 1 && (
-                                <button type="button" onClick={() => arrayHelpers.push({ ID_users: '' })} className="p-2 bg-green-500 rounded-full self-end mb-1 hover:bg-green-600 transition">
+                                <button type="button" onClick={() => arrayHelpers.push({ ID_users: '' })} className="p-2 bg-[#199431] rounded-full self-end mb-1 hover:bg-[#ADC708] hover:text-black transition">
                                   <PlusIcon className="h-5 w-5 text-white" />
                                 </button>
                               )}
@@ -195,7 +195,7 @@ export const CreateTask = () => {
                                 <TrashIcon className="h-5 w-5 text-white" />
                               </button>
                               {index === values.materials.length - 1 && (
-                                <button type="button" onClick={() => arrayHelpers.push({ ID_materials: '', observations: '' })} className="p-2 bg-green-500 rounded-full self-end mb-1 hover:bg-green-600 transition">
+                                <button type="button" onClick={() => arrayHelpers.push({ ID_materials: '', observations: '' })} className="p-2 bg-[#199431] rounded-full self-end mb-1 hover:bg-[#ADC708] hover:text-black transition">
                                   <PlusIcon className="h-5 w-5 text-white" />
                                 </button>
                               )}
@@ -210,7 +210,7 @@ export const CreateTask = () => {
               <div className="text-center mt-10 border-t border-gray-200 pt-6">
                 <button
                   type="submit"
-                  className="bg-green-600 text-white font-bold py-3 px-10 rounded-lg cursor-pointer hover:bg-green-700 transition"
+                  className="bg-[#199431] text-white font-bold py-3 px-10 rounded-lg cursor-pointer hover:bg-[#ADC708] hover:text-black transition"
                 >
                   Completar y Crear Tarea
                 </button>
@@ -220,7 +220,7 @@ export const CreateTask = () => {
         </Formik>
 
         <div className="mt-10 border-t border-gray-200 pt-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-blue-600 mb-6">TAREAS CREADAS</h2>
+          <h1 className="text-2xl sm:text-3xl text-[#199431] mb-6">TAREAS CREADAS</h1>
           <article className="w-full max-w-7xl mx-auto h-auto mt-10">
             {/* Header for larger screens */}
             <div className="hidden md:flex items-center text-gray-500 font-bold px-4 py-2 border-b">

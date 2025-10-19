@@ -44,7 +44,7 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
         >
           &times;
         </button>
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Crear Nuevo Cliente</h2>
+        <h1 className="text-2xl  mb-6 text-center ">CREAR NUEVO CLIENTE</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-4 flex flex-col items-center justify-center">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1 text-center">
@@ -57,7 +57,7 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
-              className="w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-#199431 focus:border-#199431"
             />
             {formik.touched.name && formik.errors.name ? (
               <div className="text-red-500 text-xs mt-1">{formik.errors.name}</div>
@@ -75,7 +75,7 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.phone}
-              className="w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:[#ADC708] focus:border-[#ADC708]"
             />
             {formik.touched.phone && formik.errors.phone ? (
               <div className="text-red-500 text-xs mt-1">{formik.errors.phone}</div>
@@ -93,7 +93,7 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.company}
-              className="w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#ADC708] focus:border-[#199431]"
             />
             {formik.touched.company && formik.errors.company ? (
               <div className="text-red-500 text-xs mt-1">{formik.errors.company}</div>
@@ -104,13 +104,13 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ isOpen, on
             <button
               type="button"
               onClick={onClose}
-              className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+              className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-[#DC3545] hover:text-white transition"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              className="py-2 px-4 text-white rounded-md bg-[#199431] hover:bg-[#ADC708] hover:text-black transition"
               disabled={formik.isSubmitting}
             >
               {formik.isSubmitting ? 'Creando...' : 'Crear Cliente'}

@@ -1,73 +1,58 @@
 import React, { useEffect, useState } from "react";
 import { useGeneralTask } from "../context/GeneralTaskContext";
 
-interface SpecialtyItemProps {
-  specialty: { ID_specialty: number; name: string };
-  onUpdate: (id: number, data: { name: string }) => Promise<void>;
-}
-
-// ✅ Subcomponente: cada fila maneja su propio estado
-const SpecialtyItem = ({ specialty, onUpdate }: SpecialtyItemProps) => {
+// Componente para un solo ítem de especialidad
+const SpecialtyItem = ({
+  specialty,
+  onUpdate,
+}: {
+  specialty: Specialty;
+  onUpdate: (id: number, name: string) => void;
+}) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(specialty.name);
+  const [name, setName] = useState(specialty.name);
 
-  const handleSave = async () => {
-    if (value.trim() && value !== specialty.name) {
-      await onUpdate(specialty.ID_specialty, { name: value.trim() });
+  const handleUpdate = () => {
+    if (specialty.ID_specialty) {
+      onUpdate(specialty.ID_specialty, name);
+      setIsEditing(false);
     }
-    setIsEditing(false);
   };
 
   return (
-    <div
-      className={`flex items-center justify-between border rounded-full px-4 py-2 shadow-sm transition-all duration-200 ${
-        isEditing ? "border-green-500 bg-green-50" : "border-gray-300 bg-white"
-      }`}
-    >
+    <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
       {isEditing ? (
         <input
           type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          className="border rounded px-2 py-1 flex-1 mr-2 outline-none focus:ring-2 focus:ring-green-400"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="border p-1 rounded-md w-0 grow mr-2"
         />
       ) : (
-        <span className="text-gray-800 font-medium flex-1">{specialty.name}</span>
+        <p className="font-semibold truncate">{specialty.name}</p>
       )}
 
       <div className="flex gap-2">
         {isEditing ? (
-          <>
-            <button
-              onClick={handleSave}
-              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-            >
-              Guardar
-            </button>
-            <button
-              onClick={() => {
-                setValue(specialty.name);
-                setIsEditing(false);
-              }}
-              className="bg-gray-400 hover:bg-red-500 text-white px-3 py-1 rounded-full"
-            >
-              x
-            </button>
-          </>
+          <button
+            onClick={handleUpdate}
+            className="bg-[#199431] text-white hover:bg-[#ADC708] hover:text-black px-3 py-1 rounded-md"
+          >
+            Guardar
+          </button>
         ) : (
-          <>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-3 py-1 rounded"
-            >
-              Editar
-            </button>
-          </>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="bg-[#FFC107] text-black px-3 py-1 rounded-md"
+          >
+            Editar
+          </button>
         )}
       </div>
     </div>
   );
 };
+
 
 export const SpecialtyPages: React.FC = () => {
   const [newSpecialty, setNewSpecialty] = useState("");
@@ -87,8 +72,8 @@ export const SpecialtyPages: React.FC = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-green-700 font-bold text-2xl uppercase tracking-wide mb-4">
-        Modificar especialidad:
+      <h1 className="text-2xl uppercase tracking-wide mb-4">
+        MODIFICAR ESPECIALIDADES:
       </h1>
 
       <div className="flex flex-wrap items-center gap-3 mb-6 justify-between">
@@ -96,7 +81,7 @@ export const SpecialtyPages: React.FC = () => {
         <div className="flex items-center border rounded-full overflow-hidden shadow-sm">
           <button
             onClick={handleAddSpecialty}
-            className="bg-green-600 hover:bg-green-700 text-white text-2xl px-4 py-1"
+            className="bg-[#199431] hover:bg-[#ADC708] hover:text-black text-white text-2xl px-4 py-1"
           >
             +
           </button>
@@ -119,7 +104,7 @@ export const SpecialtyPages: React.FC = () => {
           <SpecialtyItem
             key={specialty.ID_specialty ?? index}
             specialty={specialty}
-            onUpdate={updateSpecialty}
+            onUpdate={(id, name) => updateSpecialty(id, { name })}
           />
         ))}
       </div>

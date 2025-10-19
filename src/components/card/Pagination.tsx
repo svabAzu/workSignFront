@@ -63,7 +63,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-        className="px-2 py-1 text-xs sm:px-3 sm:py-2 sm:text-sm bg-[#ACACAE] rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#199431] hover:text-white transition-colors"
+        className="px-2 py-1 text-xs sm:px-3 sm:py-2 sm:text-sm bg-[#ACACAE] rounded-md disabled:opacity-50 disabled:cursor-not-allowed  hover:bg-[#199431] hover:text-white transition-colors"
           >
             Anterior
           </button>
@@ -75,7 +75,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
 
           const buttonClasses = `w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-md transition-colors text-xs sm:text-sm ${currentPage === item
               ? 'bg-[#199431] text-white font-bold'
-              : 'bg-gray-200 hover:bg-[#199431] hover:text-white'
+              : 'bg-gray-200  hover:bg-[#ADC708] hover:text-white'
             }`;
 
           return (
@@ -94,7 +94,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-        className="px-2 py-1 text-xs sm:px-3 sm:py-2 sm:text-sm bg-[#ACACAE] rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#199431] hover:text-white transition-colors"
+        className="px-2 py-1 text-xs sm:px-3 sm:py-2 sm:text-sm bg-[#ACACAE] rounded-md disabled:opacity-50 disabled:cursor-not-allowed  hover:bg-[#199431]  hover:text-white transition-colors"
           >
             Siguiente
           </button>

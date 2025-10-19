@@ -177,8 +177,8 @@ export const OperatorEditPages = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-xl max-w-5xl mx-auto w-full"
       >
-        <h1 className="text-green-600 font-bold text-2xl mb-6 uppercase tracking-wide">
-          Editar Usuario
+        <h1 className="text-2xl mb-6 uppercase tracking-wide">
+          EDITAR USUARIO:
         </h1>
 
         <div className="mb-6">
@@ -299,6 +299,13 @@ export const OperatorEditPages = () => {
                     className="object-cover w-full h-full"
                   />
                 </div>
+                
+                <label
+                  htmlFor="avatar_url"
+                  className="bg-[#199431] text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-[#ADC708] hover:text-black transition-colors text-sm"
+                >
+                  Seleccionar imagen
+                </label>
                 <input
                   type="file"
                   id="avatar_url"
@@ -319,7 +326,7 @@ export const OperatorEditPages = () => {
                     }
                   }}
                   onBlur={handleBlur}
-                  className="text-sm"
+                  className="hidden"
                 />
 
                 {/* Nombre del archivo si hay uno nuevo */}
@@ -382,7 +389,7 @@ export const OperatorEditPages = () => {
           <button
             type="submit"
             disabled={selectedUserId === null || loading}
-            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700 disabled:bg-gray-400"
+            className="bg-[#199431] text-white py-2 px-6 rounded-full hover:bg-[#ADC708] hover:text-black disabled:bg-gray-400"
           >
             {loading ? "Guardando..." : "Editar"}
           </button>
@@ -416,7 +423,7 @@ export const OperatorEditPages = () => {
                   getOperatorUser();
                 }
               }}
-              className={`${modalInfo.type === 'success' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-colors w-full sm:w-auto`}
+              className={`${modalInfo.type === 'success' ? 'bg-[#199431] hover:bg-[#ADC708] hover:text-black' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-colors w-full sm:w-auto`}
             >
               Aceptar
             </button>
