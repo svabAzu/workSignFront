@@ -1,18 +1,17 @@
-
 import { useEffect, useState } from 'react';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useParams } from 'react-router-dom';
 import { createTaskRequest } from '../api/Task';
-import { useNewJob } from '../context/NewJobContext'; // Import the context hook
+import { useNewJob } from '../context/NewJobContext';
 import { useGeneralTask } from '../context/GeneralTaskContext';
 import { TaskCard } from '../components/card/TaskCard';
 import { InfoModal } from '../components/modals/InfoModal';
 
 export const CreateTask = () => {
   const { ID_general_tasks } = useParams();
-  const { operators, materials } = useNewJob(); // Get operators and materials from context
+  const { operators, materials, operatorWorkload, loadInitialData } = useNewJob(); // Get loadInitialData
   const { getTasksByGeneralTaskId, TasksByGeneralTaskId } = useGeneralTask();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', message: '', isSuccess: false });
@@ -23,7 +22,6 @@ export const CreateTask = () => {
     }
   }, [ID_general_tasks, getTasksByGeneralTaskId]);
 
-  console.log("Operators from context:", operators);
   const initialFormValues = {
     title: '',
     description: '',
@@ -68,8 +66,6 @@ export const CreateTask = () => {
       })),
     };
 
-    console.log("Final payload:", JSON.stringify(payload, null, 2));
-
     try {
       await createTaskRequest(payload);
       setModalContent({ title: 'Éxito', message: 'Tarea creada exitosamente', isSuccess: true });
@@ -78,6 +74,7 @@ export const CreateTask = () => {
       if (ID_general_tasks) {
         getTasksByGeneralTaskId(ID_general_tasks);
       }
+      loadInitialData(); // Reload all data
     } catch (error) {
       console.error("Error creating task:", error);
       setModalContent({ title: 'Error', message: 'Hubo un error al crear la tarea. Por favor, inténtelo de nuevo.', isSuccess: false });
@@ -127,6 +124,7 @@ export const CreateTask = () => {
                     <div className="space-y-4">
                       {values.operators.map((operator, index) => {
                         const selectedOperatorData = operators.find(op => op.id === parseInt(operator.ID_users));
+                        const workload = operatorWorkload.find(w => w.userId === parseInt(operator.ID_users));
                         return (
                           <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-4 items-end p-4 bg-gray-50 rounded-lg">
                             <div className="col-span-2 grid grid-cols-2 gap-x-8">
@@ -146,11 +144,13 @@ export const CreateTask = () => {
                             <div className="flex items-center gap-2">
                               <div className="w-full">
                                 <label className="block text-sm font-bold text-gray-700">TAREAS ASIGNADAS</label>
-                                <input type="text" readOnly value={`${selectedOperatorData?.tasks || 0} tareas`} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 text-center" />
+                                <input type="text" readOnly value={`${workload?.taskCount || 0} tareas`} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 text-center" />
                               </div>
-                              <button type="button" onClick={() => arrayHelpers.remove(index)} className="p-2 bg-red-500 rounded-full self-end mb-1 hover:bg-red-600 transition">
-                                <TrashIcon className="h-5 w-5 text-white" />
-                              </button>
+                              {values.operators.length > 1 && (
+                                <button type="button" onClick={() => arrayHelpers.remove(index)} className="p-2 bg-red-500 rounded-full self-end mb-1 hover:bg-red-600 transition">
+                                  <TrashIcon className="h-5 w-5 text-white" />
+                                </button>
+                              )}
                               {index === values.operators.length - 1 && (
                                 <button type="button" onClick={() => arrayHelpers.push({ ID_users: '' })} className="p-2 bg-[#199431] rounded-full self-end mb-1 hover:bg-[#ADC708] hover:text-black transition">
                                   <PlusIcon className="h-5 w-5 text-white" />
@@ -191,9 +191,11 @@ export const CreateTask = () => {
                                 <Field as="textarea" id={`materials.${index}.observations`} name={`materials.${index}.observations`} rows={1} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 resize-none" />
                                 <ErrorMessage name={`materials[${index}].observations`} component="div" className="text-red-500 text-xs" />
                               </div>
-                              <button type="button" onClick={() => arrayHelpers.remove(index)} className="p-2 bg-red-500 rounded-full self-end mb-1 hover:bg-red-600 transition">
-                                <TrashIcon className="h-5 w-5 text-white" />
-                              </button>
+                              {values.materials.length > 1 && (
+                                <button type="button" onClick={() => arrayHelpers.remove(index)} className="p-2 bg-red-500 rounded-full self-end mb-1 hover:bg-red-600 transition">
+                                  <TrashIcon className="h-5 w-5 text-white" />
+                                </button>
+                              )}
                               {index === values.materials.length - 1 && (
                                 <button type="button" onClick={() => arrayHelpers.push({ ID_materials: '', observations: '' })} className="p-2 bg-[#199431] rounded-full self-end mb-1 hover:bg-[#ADC708] hover:text-black transition">
                                   <PlusIcon className="h-5 w-5 text-white" />

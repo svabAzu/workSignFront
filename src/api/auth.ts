@@ -1,14 +1,14 @@
-import axios from "./axios"
+import instance from "./axios"
 
 
 
 
 
-export const registerRequest = (user: myFormValues) => axios.post(`/register`, user)
-export const loginRequest = (user: myFormValuesLog) => axios.post(`/login`, user)
-export const verifyTokenRequest = () => axios.get('/verify')
+export const registerRequest = (user: myFormValues) => instance.post(`/register`, user)
+export const loginRequest = (user: myFormValuesLog) => instance.post(`/login`, user)
+export const verifyTokenRequest = () => instance.get('/verify')
 
-export const logout = () => axios.post(`/logout`)
+export const logout = () => instance.post(`/logout`)
 
 
 
