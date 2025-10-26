@@ -69,11 +69,16 @@ export const HomePages = () => {
       );
     }
 
-    // 2. Filtrar por búsqueda de cliente
+    // 2. Filtrar por búsqueda de cliente o título (insensible a acentos)
     if (busqueda) {
-      filteredTasks = filteredTasks.filter(task =>
-        task.client?.name.toLowerCase().includes(busqueda.toLowerCase())
-      );
+      const normalizeString = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const searchTerm = normalizeString(busqueda.toLowerCase());
+
+      filteredTasks = filteredTasks.filter(task => {
+        const clientName = normalizeString((task.client?.name || '').toLowerCase());
+        const taskTitle = normalizeString((task.title || '').toLowerCase());
+        return clientName.includes(searchTerm) || taskTitle.includes(searchTerm);
+      });
     }
 
     // 3. Ordenar por prioridad

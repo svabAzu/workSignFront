@@ -7,8 +7,9 @@ import {
 } from "react";
 import { getJobAndTypeJobRequest, getClientRequest, postClientRequest } from "../api/NewJob";
 import { createGeneralTaskRequest } from "../api/Generaltask";
-import { getMaterialsAllRequest } from "../api/Task";
+import { getMaterialsAllRequest, getOperatorWorkloadRequest } from "../api/Task"; // Importar la nueva función
 import { getOperatorUserRequest } from "../api/OperatorUser";
+import { type OperatorWorkload } from "../types"; // Importar el nuevo tipo
 
 // --- Interfaces ---
 interface TypeJob {
@@ -51,6 +52,7 @@ interface NewJobContextType {
     clients: Client[];
     operators: Operator[];
     materials: Material[];
+    operatorWorkload: OperatorWorkload[]; // Añadir el nuevo estado al tipo
     loading: boolean;
     loadInitialData: () => Promise<void>;
     createGeneralTask: (task: any) => Promise<any>;
@@ -78,21 +80,24 @@ export const NewJobProvider = ({ children }: NewJobProviderProps) => {
     const [clients, setClients] = useState<Client[]>([]);
     const [operators, setOperators] = useState<Operator[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
+    const [operatorWorkload, setOperatorWorkload] = useState<OperatorWorkload[]>([]); // Nuevo estado
     const [loading, setLoading] = useState<boolean>(true);
 
     const loadInitialData = async () => {
         try {
             setLoading(true);
-            // Cargar trabajos, clientes, operarios y materiales en paralelo
-            const [jobsRes, clientsRes, operatorsRes, materialsRes] = await Promise.all([
+            // Cargar todos los datos en paralelo
+            const [jobsRes, clientsRes, operatorsRes, materialsRes, workloadRes] = await Promise.all([
                 getJobAndTypeJobRequest(),
                 getClientRequest(),
                 getOperatorUserRequest(),
                 getMaterialsAllRequest(),
+                getOperatorWorkloadRequest(), // Llamar a la nueva función
             ]);
 
             setJobs(jobsRes.data.data || []);
             setClients(clientsRes.data.data || []);
+            setOperatorWorkload(workloadRes.data || []); // Guardar los datos de carga de trabajo
 
             // Transform and set operators
             const operatorData = (operatorsRes.data.data || [])
@@ -125,6 +130,7 @@ export const NewJobProvider = ({ children }: NewJobProviderProps) => {
             setClients([]);
             setOperators([]);
             setMaterials([]);
+            setOperatorWorkload([]); // Limpiar en caso de error
         } finally {
             setLoading(false);
         }
@@ -161,6 +167,7 @@ export const NewJobProvider = ({ children }: NewJobProviderProps) => {
             clients,
             operators,
             materials,
+            operatorWorkload, // Exponer el nuevo estado
             loading,
             loadInitialData,
             createGeneralTask,

@@ -1,17 +1,17 @@
 // Cambia el estado de una tarea general
-import axios from "./axios"
+import instance from "./axios"
 
 
 
-export const getGeneralTaskRequest = ()=> axios.get('/generalTask')
+export const getGeneralTaskRequest = ()=> instance.get('/generalTask')
 
-export const getGeneralTaskIdRequest =(Id:any)=> axios.get(`/generalTask/${Id}`) 
+export const getGeneralTaskIdRequest =(Id:any)=> instance.get(`/generalTask/${Id}`) 
 
-export const getGeneralTaskStateRequest = ()=> axios.get('/GeneraltaskStates')
+export const getGeneralTaskStateRequest = ()=> instance.get('/GeneraltaskStates')
 
 
 export const updateGeneralTaskStateRequest = (id: number, ID_general_task_states: number) =>
-    axios.put(`/generalTask/state/${id}`, { ID_general_task_states });
+    instance.put(`/generalTask/state/${id}`, { ID_general_task_states });
 
 export const createGeneralTaskRequest = (task: any) => {
     const formData = new FormData();
@@ -29,7 +29,7 @@ export const createGeneralTaskRequest = (task: any) => {
             }
         }
     }
-    return axios.post('/generalTask', formData, {
+    return instance.post('/generalTask', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

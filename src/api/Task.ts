@@ -1,8 +1,10 @@
-import axios from "./axios"
+import instance from "./axios"
 
-export const getTaskUssingGeneralTaskIdRequest =(Id:any)=> axios.get(`/task/general/${Id}`) 
+export const getTaskUssingGeneralTaskIdRequest =(Id:any)=> instance.get(`/task/general/${Id}`) 
 
-export const createTaskRequest = (task: any) => axios.post("/task", task);
+export const createTaskRequest = (task: any) => instance.post("/task", task);
 
 
-export const getMaterialsAllRequest = () => axios.get('/materials');
+export const getMaterialsAllRequest = () => instance.get('/materials');
+
+export const getOperatorWorkloadRequest = () => instance.get('/taskOperator/workload');

@@ -1,8 +1,8 @@
-import axios from "./axios"
+import instance from "./axios"
 
-export const getJobAndTypeJobRequest = () => axios.get('/job');
+export const getJobAndTypeJobRequest = () => instance.get('/job');
 
-export const getClientRequest = () => axios.get('/client');
+export const getClientRequest = () => instance.get('/client');
 
 
-export const postClientRequest = (client: any) => axios.post('/client', client);
+export const postClientRequest = (client: any) => instance.post('/client', client);

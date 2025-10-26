@@ -9,3 +9,10 @@ export interface RegisterFormValues {
   dni: string;
   ID_type_user: number;
 }
+
+export interface OperatorWorkload {
+  userId: number;
+  name: string;
+  lastName: string;
+  taskCount: number;
+}
