@@ -46,8 +46,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [authErrors, setAuthErros] = useState<any[]>([]);
     const [loading, setLoading] = useState(true)
 
-    //console.log('user', user)
-
     const signup = async (user: any): Promise<boolean> => {
         try {
             const res = await registerRequest(user);
@@ -69,10 +67,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         try {
             const res = await loginRequest(user);
 
-            const createdUser = res.data; // Asegúrate de que devuelve el usuario creado
-            setUser(createdUser); // Actualiza el contexto con el usuario
+            const createdUser = res.data;
+            setUser(createdUser);
             setIsAutheticaded(true);
-            // Devuelve el usuario creado
             return createdUser;
 
         } catch (error: any) {
@@ -83,20 +80,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
-
-
     const logoutUser = async () => {
         try {
-            const res = await logout();
-            console.log(res);
+            await logout();
+            Cookies.remove("token");
             setUser(null);
             setIsAutheticaded(false);
-
         } catch (error: any) {
-            if (Array.isArray(error.response.data)) {
-                return setAuthErros(error.response.data);
-            }
-            setAuthErros([error.response.data.message]);
+            console.error(error)
         }
     };
 
@@ -112,38 +103,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     useEffect(() => {
         async function checkLogin() {
-            const cookies = Cookies.get();
-
-            if (!cookies.token) {
-                setIsAutheticaded(false);
-                setLoading(false);
-                return setUser(null);
-            }
-
             try {
                 const res = await verifyTokenRequest();
-
-                if (res.data) {
-                    setUser(res.data);
+                if (res.data && Object.keys(res.data).length > 0) {
                     setIsAutheticaded(true);
+                    setUser(res.data);
                 } else {
-                    setUser(null);
                     setIsAutheticaded(false);
+                    setUser(null);
                 }
             } catch (error) {
-                console.error(error);
-                setUser(null);
                 setIsAutheticaded(false);
+                setUser(null);
             } finally {
-                setLoading(false); // Asegúrate de siempre finalizar el estado de carga
+                setLoading(false);
             }
-
         }
         checkLogin();
     }, []);
-
-
-
 
     return (
         <AuthContext.Provider
