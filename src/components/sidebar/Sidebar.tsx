@@ -4,6 +4,7 @@ import {
   MdLogout,
   MdOutlineSettings,
   MdAdd,
+  MdHelpOutline, 
 } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -100,16 +101,16 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
 
       <span className="h-0.5 w-full bg-white flex my-6 " />
 
-      <section className="flex flex-col justify-start items-center gap-3 w-full mt-auto mb-4">
-        {secondaryLinksArray.map(({ icon, label, To }) => (
-          <div
-            className={`flex justify-center items-center  ${
-              siderbarOpen ? "w-full" : "w-[80%]"
-            }`}
-            key={label}
-          >
-            <div
-              className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8
+    <section className="flex flex-col justify-start items-center gap-3 w-full mt-auto mb-4">
+  {secondaryLinksArray.map(({ icon, label, To }) => (
+    <div
+      className={`flex justify-center items-center ${
+        siderbarOpen ? "w-full" : "w-[80%]"
+      }`}
+      key={label}
+    >
+      <div
+        className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8
         max-w-[70%] w-full rounded-2xl border-2
         ${
           (
@@ -121,37 +122,64 @@ export const Sidebar = ({ siderbarOpen, setSidebarOpen }: SidebarProps) => {
             : "border-[#ACACAE] bg-[#ffffff] text-black hover:border-[#ADC708]"
         }
       `}
-            >
-              <Link
-                to={To}
-                className="flex items-center decoration-none py-1.5 w-full justify-center "
-              >
-                <div className="px-2 py-2 flex ">{icon}</div>
-                {!siderbarOpen && <span>{label}</span>}
-              </Link>
-            </div>
-          </div>
-        ))}
-        <div
-          className={`flex justify-center items-center ${
-            siderbarOpen ? "w-full" : "w-[80%]"
-          }`}
+      >
+        <Link
+          to={To}
+          className="flex items-center decoration-none py-1.5 w-full justify-center "
         >
-          <div
-            className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8 max-w-[70%] w-full rounded-2xl border-2 border-[#ACACAE] bg-[#ffffff] text-black hover:border-[#ADC708]`}
-          >
-            <button
-              onClick={handleClick}
-              className="flex items-center decoration-none py-1.5 w-full justify-center"
-            >
-              <div className="px-2 py-2 flex">
-                <MdLogout className="size-6" />
-              </div>
-              {!siderbarOpen && <span>Salir</span>}
-            </button>
-          </div>
+          <div className="px-2 py-2 flex ">{icon}</div>
+          {!siderbarOpen && <span>{label}</span>}
+        </Link>
+      </div>
+    </div>
+  ))}
+
+  {/* 🔗 Nuevo botón para el Manual de Usuario */}
+  <div
+    className={`flex justify-center items-center ${
+      siderbarOpen ? "w-full" : "w-[80%]"
+    }`}
+  >
+    <div
+      className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8 max-w-[70%] w-full rounded-2xl border-2 border-[#ACACAE] bg-[#ffffff] text-black hover:border-[#ADC708]`}
+    >
+      <a
+        href="https://www.canva.com/design/DAG223iZ468/tMkQpGOK6_s2qLXZlFvMcA/view?utm_content=DAG223iZ468&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h12e7206703"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center decoration-none py-1.5 w-full justify-center"
+      >
+        <div className="px-2 py-2 flex">
+          {/* Podés cambiar el ícono si querés */}
+          <MdHelpOutline className="size-6" />
         </div>
-      </section>
+        {!siderbarOpen && <span>Manual</span>}
+      </a>
+    </div>
+  </div>
+
+  {/* Botón de Salir */}
+  <div
+    className={`flex justify-center items-center ${
+      siderbarOpen ? "w-full" : "w-[80%]"
+    }`}
+  >
+    <div
+      className={`mx-2 py-[15%] flex flex-col justify-center items-center max-h-8 max-w-[70%] w-full rounded-2xl border-2 border-[#ACACAE] bg-[#ffffff] text-black hover:border-[#ADC708]`}
+    >
+      <button
+        onClick={handleClick}
+        className="flex items-center decoration-none py-1.5 w-full justify-center"
+      >
+        <div className="px-2 py-2 flex">
+          <MdLogout className="size-6" />
+        </div>
+        {!siderbarOpen && <span>Salir</span>}
+      </button>
+    </div>
+  </div>
+</section>
+
     </main>
   );
 };
