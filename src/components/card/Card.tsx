@@ -32,7 +32,7 @@ const getTrafficLightColor = (priority: number): string | undefined => {
 export const Card = ({ generalTask }: { generalTask: any }) => {
   const [isImageModalOpen, setImageModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-  const { updateGeneralTaskState, getGeneralTaskById } = useGeneralTask();
+  const { updateGeneralTaskState, getGeneralTaskById, resumeGeneralTask } = useGeneralTask();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -116,6 +116,29 @@ export const Card = ({ generalTask }: { generalTask: any }) => {
                     }}
                   >
                     {loading ? 'Cambiando...' : 'Terminar trabajo'}
+                  </button>
+                )}
+                {user && user.ID_type_user && user.ID_type_user.ID_type_user === 1 && generalTask.generalTaskState?.ID_general_task_states === 3 && (
+                  <button
+                    className="h-8 px-3 bg-blue-600 text-white rounded-full hover:bg-blue-500 hover:text-black font-bold text-xs whitespace-nowrap flex items-center justify-center"
+                    style={{ minWidth: 100 }}
+                    disabled={loading}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setLoading(true);
+                      try {
+                        await resumeGeneralTask(generalTask.ID_general_tasks);
+                        // Refrescar la tarea individual si existe (detalle)
+                        if (getGeneralTaskById && generalTask.ID_general_tasks) {
+                          await getGeneralTaskById(generalTask.ID_general_tasks);
+                        }
+                      } catch (err) {
+                        console.error(err);
+                      }
+                      setLoading(false);
+                    }}
+                  >
+                    {loading ? 'Reanudando...' : 'Reanudar trabajo'}
                   </button>
                 )}
               </div>

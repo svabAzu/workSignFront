@@ -4,7 +4,7 @@ import {
     createContext, useContext, useState, useCallback,
 } from "react";
 import { getGeneralTaskRequest, getGeneralTaskIdRequest } from "../api/Generaltask";
-import { getGeneralTaskStateRequest, updateGeneralTaskStateRequest } from "../api/Generaltask";
+import { getGeneralTaskStateRequest, updateGeneralTaskStateRequest, resumeGeneralTaskRequest } from "../api/Generaltask";
 import {
     getSpecialtiesRequest,
     createSpecialtyRequest,
@@ -31,6 +31,7 @@ interface GeneralTaskContextType {
     updateOperatorUser: (id: number, userData: FormData) => Promise<void>;
     updateOperatorUserState: (id: number, state: boolean) => Promise<void>;
     updateGeneralTaskState: (id: number, ID_general_task_states: number) => Promise<void>;
+    resumeGeneralTask: (id: number) => Promise<any>;
     individualTask: any;
     setIndividualTask: (task: any) => void;
     getTasksByGeneralTaskId: (id: any) => Promise<void>;
@@ -98,6 +99,24 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             await getGeneralTask();
         } catch (error) {
             console.error("Error al actualizar el estado de la tarea general", error);
+        }
+    }, [getGeneralTask]);
+
+    // Reanuda una tarea general: llama al endpoint que reestablece tareas operators y pone el general en 'en proceso'
+    const resumeGeneralTask = useCallback(async (id: number) => {
+        try {
+            const res = await resumeGeneralTaskRequest(id);
+            // Si el backend devuelve el general refrescado, actualizar el individual
+            const refreshed = res?.data?.refreshedGeneral || res?.data?.data || null;
+            if (refreshed) {
+                setIndividualTask(refreshed);
+            }
+            // Refrescar el listado general
+            await getGeneralTask();
+            return res.data;
+        } catch (error) {
+            console.error("Error al reanudar la tarea general", error);
+            throw error;
         }
     }, [getGeneralTask]);
 
@@ -196,6 +215,7 @@ export function GeneralTaskProvider({ children }: { children: ReactNode }) {
             updateOperatorUser,
             updateOperatorUserState,
             updateGeneralTaskState,
+            resumeGeneralTask,
             individualTask,
             setIndividualTask,
             getGeneralTaskById,

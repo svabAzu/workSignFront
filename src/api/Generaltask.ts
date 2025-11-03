@@ -13,6 +13,9 @@ export const getGeneralTaskStateRequest = ()=> instance.get('/GeneraltaskStates'
 export const updateGeneralTaskStateRequest = (id: number, ID_general_task_states: number) =>
     instance.put(`/generalTask/state/${id}`, { ID_general_task_states });
 
+export const resumeGeneralTaskRequest = (id: number) =>
+    instance.put(`/generalTask/resume/${id}`);
+
 export const createGeneralTaskRequest = (task: any) => {
     const formData = new FormData();
     for (const key in task) {
